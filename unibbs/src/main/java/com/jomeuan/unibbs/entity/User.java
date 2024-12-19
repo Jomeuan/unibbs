@@ -29,5 +29,7 @@ public class User implements Serializable {
 
     private String password;
 
+    //可以为null,TODO: 用户的状态控制
     private Integer state;
+
 }

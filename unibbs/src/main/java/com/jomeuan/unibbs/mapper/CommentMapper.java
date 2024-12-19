@@ -12,5 +12,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @since 2024-12-03
  */
 public interface CommentMapper extends BaseMapper<Comment> {
+    @Update("update `comment` set likes_count=likes_count+#{oprand} where id=#{id}")
+    Integer updateLikeCount(@Param("id")Long id,@Param("oprand")Integer operand);
 
 }

@@ -23,7 +23,49 @@ import lombok.Setter;
 @Setter
 public class Action implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
+
+  // action type
+  @AllArgsConstructor
+  @Getter
+  public static enum ActionType {
+  /**
+   * id为1的action是所有发文的targetId
+   */
+    SUPER_COMMENT(0),
+
+    COMMENT(1),
+
+    /**
+   * 逻辑上也是一种Comment,特指已经过时(被修改过)的comment,查找有效的comment时不用查多次表
+   * 其target_id也是指向被评论的对象,content_id指向过去评论的内容
+   */
+    COMMENT_COVERED(2),
+
+    /**
+   * 点赞
+   * 
+   * @Note 其contentId为点赞的次数奇数表示点赞了,偶数表示取消了点赞
+   */
+    LIKE(3),
+
+    COLLECT(4),
+
+    PULL(5);
+
+    int value;
+    public static ActionType of(int value){
+      for(ActionType at: ActionType.values()){
+        if(at.value == value){
+          return at;
+        }
+      }
+      return null;
+    }
+    
+  }
+
+  /**********action fields define****************/
 
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;

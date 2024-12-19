@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-UnibbsApplication<unibbs>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.jomeuan.unibbs.UnibbsApplication",
+            "projectName": "unibbs",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
