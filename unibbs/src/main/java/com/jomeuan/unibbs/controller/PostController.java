@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.jomeuan.unibbs.bo.Post;
+import com.jomeuan.unibbs.bo.PostBo;
 import com.jomeuan.unibbs.entity.Action;
 import com.jomeuan.unibbs.entity.Comment;
 import com.jomeuan.unibbs.entity.domain.PostDo;
@@ -29,10 +31,7 @@ import com.jomeuan.unibbs.vo.PostDetailVo;
 import com.jomeuan.unibbs.vo.PostVo;
 import com.jomeuan.unibbs.vo.R;
 
-import jakarta.websocket.server.PathParam;
 
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
 /**
  * <p>
@@ -58,7 +57,7 @@ public class PostController {
     private CommentMapper commentMapper;
 
     @GetMapping("")
-    public R<List<PostVo>> getPosts(@PathParam("userId") Long userId) {
+    public R<List<PostVo>> getPosts(@RequestParam("userId") Long userId) {
         // 根据userId获得其发过的帖子
         if (userId != null) {
             List<PostVo> res = postService.listPostsByUserId(userId).stream()
@@ -74,8 +73,8 @@ public class PostController {
     }
 
     @GetMapping("detail")
-    public R<PostDetailVo> getPostDetail(@PathParam("actionId") Long actionId) {
-        Post masterPost = new Post(actionMapper.selectById(actionId));
+    public R<PostDetailVo> getPostDetail(@RequestParam("actionId") Long actionId) {
+        PostBo masterPost = new PostBo(actionMapper.selectById(actionId));
         masterPost = postService.fillContent(masterPost, masterPost.getContentId());
         masterPost = postService.fillTargetContent(masterPost, masterPost.getTargetId());
 
@@ -83,8 +82,8 @@ public class PostController {
         res.setPostVo(new PostVo(masterPost));
 
         List<PostDetailVo.Comment> commentVos = new ArrayList<>();
-        List<Post> commentPosts = postService.listCommentsOf(masterPost);
-        for (Post commentPost : commentPosts) {
+        List<PostBo> commentPosts = postService.listCommentsOf(masterPost);
+        for (PostBo commentPost : commentPosts) {
             PostDetailVo.Comment r = new PostDetailVo.Comment();
             // 装填评论的内容
             r.setPostVo(new PostVo(commentPost));
@@ -95,7 +94,7 @@ public class PostController {
                             .eq("user_id", masterPost.getUserId())
                             .eq("target_id", commentPost.getActionId()));
             if (masterCommentAction != null) {
-                Post masterCommentPost = new Post(masterCommentAction);
+                PostBo masterCommentPost = new PostBo(masterCommentAction);
                 masterCommentPost = postService.fillContent(masterCommentPost, masterCommentPost.getContentId());
                 // 装入r.comment
                 r.setComment(new PostDetailVo.Comment(new PostVo(masterCommentPost), null));
@@ -115,7 +114,7 @@ public class PostController {
     /**
      * 用户发文/评论
      * 
-     * @param postVo {@link com.jomeuan.unibbs.service.impl.PostServiceImpl#saveComment(com.jomeuan.unibbs.bo.Post)}
+     * @param postVo {@link com.jomeuan.unibbs.service.impl.PostServiceImpl#saveComment(com.jomeuan.unibbs.bo.PostBo)}
      * @return
      */
     @PostMapping("/comment")

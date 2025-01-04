@@ -13,7 +13,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
  * <p>
- *  Mapper 接口
+ * Mapper 接口
  * </p>
  *
  * @author jomeuan
@@ -24,16 +24,14 @@ public interface ActionMapper extends BaseMapper<Action> {
      * 根据 targetId 查找action对应的所有评论comment及其内容
      */
     List<PostDo> selectPostByActionId(
-        @Param("actionId") Long actionId,
-        @Param("key")String key,
-        @Param("isAsc")boolean isAsc
-    );
+            @Param("actionId") Long actionId,
+            @Param("key") String key,
+            @Param("isAsc") boolean isAsc);
 
-        // TODO: 后续需要加入userId查询功能
-        // List<Post> selectPostByUserId(
-        // @Param("actionId") Long userId,
-        // @Param("key")String key,
-        // @Param("isAsc")boolean isAsc);
-    
-    
+    // TODO: 后续需要加入userId查询功能
+    // List<Post> selectPostByUserId(
+    // @Param("actionId") Long userId,
+    // @Param("key")String key,
+    // @Param("isAsc")boolean isAsc);
+
 }

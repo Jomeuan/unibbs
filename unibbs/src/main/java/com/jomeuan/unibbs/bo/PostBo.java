@@ -1,28 +1,24 @@
-package com.jomeuan.unibbs.entity.domain;
+package com.jomeuan.unibbs.bo;
 
 import java.time.LocalDateTime;
 
-import com.jomeuan.unibbs.bo.Post;
 import com.jomeuan.unibbs.entity.Action;
+import com.jomeuan.unibbs.entity.domain.PostDo;
+import com.jomeuan.unibbs.vo.PostVo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-/**
- * 帖子,覆盖了 action 及其内容
- */
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class PostDo {
+@AllArgsConstructor
+public class PostBo {
     private Long actionId;
     // 作者
     private Long userId;
 
-    private Integer type;
+    private Action.ActionType type;
     // 发布时间
     private LocalDateTime time;
 
@@ -37,16 +33,27 @@ public class PostDo {
     private Long collectionsCount;
     private Long pullCount;
 
-    public Action getAction() {
-        Action action = new Action(actionId, userId, targetId, type, contentId, time, Long.valueOf(0));
-        return action;
+    public PostBo(Action action) {
+        this(
+                action.getId(),
+                action.getUserId(),
+                Action.ActionType.of(action.getType()),
+                action.getTime(),
+                action.getContentId(),
+                null,
+                action.getTargetId(),
+                null,
+                null,
+                null,
+                null,
+                null);
     }
 
-    public Post toPostBo() {
-        return new Post(
+    public PostDo toPostDo() {
+        return new PostDo(
                 actionId,
                 userId,
-                Action.ActionType.of(type),
+                type.getValue(),
                 time,
                 contentId,
                 content,
@@ -57,4 +64,5 @@ public class PostDo {
                 collectionsCount,
                 pullCount);
     }
+
 }

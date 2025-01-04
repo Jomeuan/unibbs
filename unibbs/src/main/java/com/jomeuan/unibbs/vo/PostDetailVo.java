@@ -2,7 +2,7 @@ package com.jomeuan.unibbs.vo;
 
 import java.util.List;
 
-import com.jomeuan.unibbs.bo.Post;
+import com.jomeuan.unibbs.bo.PostBo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

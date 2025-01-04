@@ -2,7 +2,7 @@ package com.jomeuan.unibbs.vo;
 
 import java.time.LocalDateTime;
 
-import com.jomeuan.unibbs.bo.Post;
+import com.jomeuan.unibbs.bo.PostBo;
 import com.jomeuan.unibbs.entity.Action;
 import com.jomeuan.unibbs.entity.Action.ActionType;
 
@@ -36,7 +36,7 @@ public class PostVo {
     private Long collectionsCount;
     private Long pullCount;
 
-    public PostVo(Post post) {
+    public PostVo(PostBo post) {
         this(
             post.getActionId(),
             post.getUserId(),
@@ -53,8 +53,8 @@ public class PostVo {
         );
     }
 
-    public Post toPostBo() {
-        Post res = new Post(
+    public PostBo toPostBo() {
+        PostBo res = new PostBo(
                 actionId,
                 userId,
                 ActionType.valueOf(type.toUpperCase()),

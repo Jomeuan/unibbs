@@ -2,7 +2,7 @@ package com.jomeuan.unibbs.entity.domain;
 
 import java.time.LocalDateTime;
 
-import com.jomeuan.unibbs.bo.Post;
+import com.jomeuan.unibbs.bo.PostBo;
 import com.jomeuan.unibbs.entity.Action;
 
 import lombok.AllArgsConstructor;
@@ -42,8 +42,8 @@ public class PostDo {
         return action;
     }
 
-    public Post toPostBo() {
-        return new Post(
+    public PostBo toPostBo() {
+        return new PostBo(
                 actionId,
                 userId,
                 Action.ActionType.of(type),

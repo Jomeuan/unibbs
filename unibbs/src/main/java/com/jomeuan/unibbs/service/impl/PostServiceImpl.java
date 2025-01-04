@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.jomeuan.unibbs.bo.Post;
+import com.jomeuan.unibbs.bo.PostBo;
 import com.jomeuan.unibbs.entity.Action;
 import com.jomeuan.unibbs.entity.Comment;
 import com.jomeuan.unibbs.entity.domain.PostDo;
@@ -37,7 +37,7 @@ public class PostServiceImpl implements IPostService {
      * @param post post.actionId不为空,contentId不为空
      */
     @Override
-    public Post fillContent(Post post, Long contentId) {
+    public PostBo fillContent(PostBo post, Long contentId) {
         if (post.getActionId() == null || contentId == null) {
             throw new IllegalArgumentException("post.actionId and contentId must not be null");
         }
@@ -56,11 +56,11 @@ public class PostServiceImpl implements IPostService {
      * @param post post.actionId 不为空, targetActionId 不为空
      */
     @Override
-    public Post fillTargetContent(Post post, Long targetActionId) {
+    public PostBo fillTargetContent(PostBo post, Long targetActionId) {
         if (post.getActionId() == null || targetActionId == null) {
             throw new IllegalArgumentException("post.actionId and contentId must not be null");
         }
-        //如果是评论(不是发文则填充评论对象的content)
+        // 如果是评论(不是发文则填充评论对象的content)
         if (targetActionId != 1) {
             Long targetContentId = actionMapper.selectById(targetActionId).getContentId();
             Comment comment = commentMapper.selectById(targetContentId);
@@ -74,30 +74,32 @@ public class PostServiceImpl implements IPostService {
     }
 
     @Override
-    public List<Post> listCommentsOf(Post post) {
+    public List<PostBo> listCommentsOf(PostBo post) {
         // 找到targetId为post.getAction的action,再根据action构建Post,而后装填content
         List<Action> actions = actionMapper.selectList(new QueryWrapper<Action>().eq("target_id", post.getActionId())
                 .eq("type", Action.ActionType.COMMENT.getValue()));
-        List<Post> res = actions.stream().map(action -> new Post(action)).collect(Collectors.toList());
+        List<PostBo> res = actions.stream().map(action -> new PostBo(action)).collect(Collectors.toList());
         res.stream().forEach(p -> this.fillContent(p, p.getContentId()));
         return res;
     }
 
     @Override
-    public List<Post> listPostsByUserId(Long userId) {
+    public List<PostBo> listPostsByUserId(Long userId) {
         List<Action> actions = actionMapper.selectList(new QueryWrapper<Action>().eq("user_id", userId));
-        List<Post> posts = actions.stream().map((action) -> {
-            Post post = new Post(action);
+        List<PostBo> posts = actions.stream().map((action) -> {
+            PostBo post = new PostBo(action);
             post.setContent(commentMapper.selectById(action.getContentId()).getContent());
-            Long targetContentId = actionMapper.selectById(action.getTargetId()).getContentId();
-            post.setTargetContent(commentMapper.selectById(targetContentId).getContent());
+            if (post.getTargetId() != 1) {
+                Long targetContentId = actionMapper.selectById(action.getTargetId()).getContentId();
+                post.setTargetContent(commentMapper.selectById(targetContentId).getContent());
+            }
             return post;
         }).collect(Collectors.toList());
         return posts;
     }
 
     @Override
-    public Post save(Post post) {
+    public PostBo save(PostBo post) {
         if (post.getTime() == null)
             post.setTime(LocalDateTime.now());
 
@@ -118,11 +120,11 @@ public class PostServiceImpl implements IPostService {
      *             type=ActionType.COMMENT=1
      *             time=前端传来的值或者insertPost中被赋值now();
      *             content 评论的内容
-     *             targetId 如果是0则是发文,否则被评论的action的id
+     *             targetId 如果是1则是发文,否则被评论的action的id
      * 
      * @return post 相较于入参post多了actionId和contentId字段
      */
-    public Post saveComment(Post post) {
+    public PostBo saveComment(PostBo post) {
         if (post.getActionId() == null)
             post.setActionId(idGenerator.nextId().longValue());
 
@@ -139,7 +141,7 @@ public class PostServiceImpl implements IPostService {
         actionMapper.insert(post.toPostDo().getAction());
 
         // 如果是评论,要给评论对象的commentsCount+=1
-        if (post.getTargetId() != null && post.getTargetId() != 0) {
+        if (post.getTargetId() != null && post.getTargetId() != Action.ActionType.SUPER_COMMENT.getValue()) {
             // 被评论的action的id为post.getTargetId()
             Action actionCommented = actionMapper.selectById(post.getTargetId());
 
@@ -166,7 +168,7 @@ public class PostServiceImpl implements IPostService {
      *             targetId被点赞的action的id;
      * @return post 相较于入参post多了actionId字段
      */
-    public Post saveLike(Post post) {
+    public PostBo saveLike(PostBo post) {
         // 判断action是否有过记录
         Action likeAction = actionMapper.selectOne(
                 new QueryWrapper<Action>().eq("user_id", post.getUserId()).eq("target_id", post.getTargetId()));
@@ -189,7 +191,7 @@ public class PostServiceImpl implements IPostService {
             commentMapper.updateLikeCount(post.getContentId(), added);
         }
 
-        return new Post(likeAction);
+        return new PostBo(likeAction);
     }
 
 }

@@ -2,7 +2,7 @@ package com.jomeuan.unibbs.vo;
 
 import java.time.LocalDateTime;
 
-import com.jomeuan.unibbs.bo.Post;
+import com.jomeuan.unibbs.bo.PostBo;
 import com.jomeuan.unibbs.entity.Action;
 
 import lombok.Data;
@@ -28,8 +28,8 @@ public class LikePubulishVo {
     private Long targetContentId;
     private String targetContent;
 
-    public Post toPostBo() {
-        Post result = new Post(
+    public PostBo toPostBo() {
+        PostBo result = new PostBo(
                 actionId, userId, Action.ActionType.LIKE, time,
                 targetContentId, content, targetId, targetContent,
                 null, null, null, null);

@@ -1,6 +1,6 @@
 package com.jomeuan.unibbs.service;
 
-import com.jomeuan.unibbs.bo.Post;
+import com.jomeuan.unibbs.bo.PostBo;
 import com.jomeuan.unibbs.entity.Action;
 import com.jomeuan.unibbs.entity.domain.PostDo;
 import com.baomidou.mybatisplus.extension.service.IService;

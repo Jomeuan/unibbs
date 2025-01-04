@@ -1,6 +1,6 @@
 package com.jomeuan.unibbs.service.impl;
 
-import com.jomeuan.unibbs.bo.Post;
+import com.jomeuan.unibbs.bo.PostBo;
 import com.jomeuan.unibbs.entity.Action;
 import com.jomeuan.unibbs.entity.Comment;
 import com.jomeuan.unibbs.entity.domain.PostDo;
@@ -27,8 +27,5 @@ import org.springframework.stereotype.Service;
 @Service
 public class ActionServiceImpl extends ServiceImpl<ActionMapper, Action> implements IActionService {
 
-   
-    
-   
 
 }

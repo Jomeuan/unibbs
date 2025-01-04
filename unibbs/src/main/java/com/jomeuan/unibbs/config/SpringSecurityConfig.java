@@ -8,7 +8,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-
+import org.springframework.security.config.Customizer;
 // @EnableWebSecurity
 @EnableMethodSecurity
 @Configuration
@@ -31,12 +31,15 @@ public class SpringSecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
         http.authorizeHttpRequests(
                 (authorizeHttpRequests) -> authorizeHttpRequests
                         .requestMatchers("/post/**").permitAll()
-                        .requestMatchers("/login.html").permitAll()
-                        .requestMatchers("/testUser").hasRole("USER"));
 
+                        .requestMatchers("/login.html").permitAll()
+                        .requestMatchers("user/testUser").authenticated()
+                        .anyRequest().authenticated());
+        http.formLogin(Customizer.withDefaults());
         http.csrf((csrf) -> csrf.disable());
 
         return http.build();

@@ -2,15 +2,15 @@ package com.jomeuan.unibbs.service;
 
 import java.util.List;
 
-import com.jomeuan.unibbs.bo.Post;
+import com.jomeuan.unibbs.bo.PostBo;
 import com.jomeuan.unibbs.entity.Action;
 import com.jomeuan.unibbs.entity.domain.PostDo;
 
 public interface IPostService {
     
-    public Post save(Post post);
-    public List<Post> listPostsByUserId(Long userId);
-    public List<Post> listCommentsOf(Post post);
+    public PostBo save(PostBo post);
+    public List<PostBo> listPostsByUserId(Long userId);
+    public List<PostBo> listCommentsOf(PostBo post);
 
     /**
      * 根据contentid装填其对应的content和XXX_counts到post中
@@ -18,7 +18,7 @@ public interface IPostService {
      * @param contentId
      * @return
      */
-    public Post fillContent(Post post,Long contentId);
+    public PostBo fillContent(PostBo post,Long contentId);
 
-    public Post fillTargetContent(Post post,Long targetActionId);
+    public PostBo fillTargetContent(PostBo post,Long targetActionId);
 }

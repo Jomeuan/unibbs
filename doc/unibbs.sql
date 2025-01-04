@@ -40,5 +40,5 @@ CREATE TABLE IF NOT EXISTS
     `collections_count` INT UNSIGNED NOT NULL DEFAULT 0,
     `pull_count` INT UNSIGNED NOT NULL DEFAULT 0,
     `state` TINYINT,
-    `last_valid_comment_id` INT UNSIGNED
+    `last_comment_id` INT UNSIGNED
   );

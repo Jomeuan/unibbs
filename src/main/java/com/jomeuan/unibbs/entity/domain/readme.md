@@ -1,4 +1,0 @@
-# domain
-
-domain 和entity的区别 domain不同于entity严格对应着一张表中的各个字段
-在postDo中对应着action和comment的拼接

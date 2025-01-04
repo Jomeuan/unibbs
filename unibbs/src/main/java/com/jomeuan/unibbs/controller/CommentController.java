@@ -36,10 +36,13 @@ public class CommentController {
 
     @Autowired
     private IActionService actionService;
+    
     @Autowired
     private ActionMapper actionMapper;
+
     @Autowired
     private ICommentService commentService;
+    
     @Autowired
     private CommentMapper commentMapper;
 

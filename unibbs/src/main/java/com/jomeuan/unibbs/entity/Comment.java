@@ -35,5 +35,5 @@ public class Comment implements Serializable {
 
     private Integer state;
 
-    private Long lastValidCommentId;
+    private Long lastCommentId;
 }

@@ -36,7 +36,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
         List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 
-        Long roleId=userRoleMapper.selectOne(new QueryWrapper<UserRole>().eq("user_id", user.getId())).getUserId();
+        Long roleId=userRoleMapper.selectOne(new QueryWrapper<UserRole>().eq("user_id", user.getId())).getRoleId();
         Role role = roleMapper.selectById(roleId);
         authorities.add(new SimpleGrantedAuthority("ROLE_"+role.getName()));
 

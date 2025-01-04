@@ -71,7 +71,7 @@ class UnibbsApplicationTests {
         //5个对发文的评论
         for(int i=0; i<5; i++){
             PostVo comment = new PostVo();
-            comment.setUserId(userId);
+            // comment.setUserId(userId);
             comment.setType(Action.ActionType.COMMENT.name());
             comment.setContent("这是user1的第" + (i+1) + "个评论");
             comment.setTime(LocalDateTime.now());
@@ -81,4 +81,6 @@ class UnibbsApplicationTests {
 
         System.out.println(article.getActionId());
     }
+        
+
 }
