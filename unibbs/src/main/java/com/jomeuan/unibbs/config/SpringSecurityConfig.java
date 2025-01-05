@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.Customizer;
+
 // @EnableWebSecurity
 @EnableMethodSecurity
 @Configuration
@@ -35,9 +36,7 @@ public class SpringSecurityConfig {
         http.authorizeHttpRequests(
                 (authorizeHttpRequests) -> authorizeHttpRequests
                         .requestMatchers("/post/**").permitAll()
-
-                        .requestMatchers("/login.html").permitAll()
-                        .requestMatchers("user/testUser").authenticated()
+                        .requestMatchers("/user/register").permitAll()
                         .anyRequest().authenticated());
         http.formLogin(Customizer.withDefaults());
         http.csrf((csrf) -> csrf.disable());

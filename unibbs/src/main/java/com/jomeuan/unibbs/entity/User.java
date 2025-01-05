@@ -24,7 +24,8 @@ public class User implements Serializable {
     private Long id;
 
     private String name;
-
+    
+    // 用来登录的账号
     private String account;
 
     private String password;

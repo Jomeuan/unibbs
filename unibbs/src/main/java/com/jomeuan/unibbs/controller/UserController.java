@@ -57,15 +57,16 @@ public class UserController {
      * 注册一个游客身份的user
      * 
      * @param userVo
-     * @param httpResponse
      * @return
      */
     @PostMapping("register")
-    public R<?> register(@RequestBody BasicUserVo userVo, HttpServletResponse httpResponse) {
+    public R<?> register(@RequestBody BasicUserVo userVo) {
         // 1. 先检查该userVo中的 username是否已经存在
         if (userService.getOne(new QueryWrapper<User>().eq("account", userVo.getAccount())) != null) {
             return R.error("该用户已存在");
         }
+        //2.注册一个 ROLE 为 User 的用户
+        userService.register(userVo);
 
         return R.ok(null);
     }
