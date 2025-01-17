@@ -2,11 +2,28 @@
     "configurations": [
         {
             "type": "java",
+            "name": "JwtTest",
+            "request": "launch",
+            "mainClass": "com.jomeuan.unibbs.security.JwtTest",
+            "projectName": "security"
+        },
+        {
+            "type": "java",
             "name": "Spring Boot-UnibbsApplication<unibbs>",
             "request": "launch",
             "cwd": "${workspaceFolder}",
             "mainClass": "com.jomeuan.unibbs.UnibbsApplication",
             "projectName": "unibbs",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-UnibbsSecurityApplication<security>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.jomeuan.unibbs.security.UnibbsSecurityApplication",
+            "projectName": "security",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
         }

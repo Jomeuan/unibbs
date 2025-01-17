@@ -1,4 +1,4 @@
-package com.jomeuan.unibbs;
+package com.jomeuan.unibbs.codeGenerator;
 
 import java.nio.file.Paths;
 
