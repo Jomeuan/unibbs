@@ -9,7 +9,7 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <groupId>com.jomeuan</groupId>
+    <groupId>com.jomeuan.unibbs</groupId>
     <artifactId>code-generator</artifactId>
     <version>1.0-SNAPSHOT</version>
 

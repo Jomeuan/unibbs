@@ -1,4 +1,4 @@
-package com.jomeuan.unibbs.lang;
+package com.jomeuan.unibbs.forum.lang;
 
 import org.junit.jupiter.api.Test;
 

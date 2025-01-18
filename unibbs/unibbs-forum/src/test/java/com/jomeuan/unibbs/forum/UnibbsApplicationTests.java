@@ -1,4 +1,4 @@
-package com.jomeuan.unibbs;
+package com.jomeuan.unibbs.forum;
 
 import java.time.LocalDateTime;
 
@@ -7,17 +7,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.jomeuan.unibbs.controller.PostController;
-import com.jomeuan.unibbs.controller.UserController;
-import com.jomeuan.unibbs.entity.Action;
-import com.jomeuan.unibbs.entity.User;
-import com.jomeuan.unibbs.entity.domain.PostDo;
-import com.jomeuan.unibbs.service.IActionService;
-import com.jomeuan.unibbs.service.IPostService;
-import com.jomeuan.unibbs.service.IUserService;
-import com.jomeuan.unibbs.util.IdGenerator;
-import com.jomeuan.unibbs.vo.BasicUserVo;
-import com.jomeuan.unibbs.vo.PostVo;
+import com.jomeuan.unibbs.forum.controller.PostController;
+import com.jomeuan.unibbs.forum.controller.UserController;
+import com.jomeuan.unibbs.forum.entity.Action;
+import com.jomeuan.unibbs.forum.entity.User;
+import com.jomeuan.unibbs.forum.entity.domain.PostDo;
+import com.jomeuan.unibbs.forum.service.IActionService;
+import com.jomeuan.unibbs.forum.service.IPostService;
+import com.jomeuan.unibbs.forum.service.IUserService;
+import com.jomeuan.unibbs.forum.util.IdGenerator;
+import com.jomeuan.unibbs.forum.vo.BasicUserVo;
+import com.jomeuan.unibbs.forum.vo.PostVo;
 
 @SpringBootTest
 class UnibbsApplicationTests {

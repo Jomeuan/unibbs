@@ -1,0 +1,11 @@
+server:
+  port: 9999
+
+spring:
+  cloud:
+    gateway:
+      routes:
+      - id: login_jwt
+        uri: lb://unibbs-security
+        predicates:
+        - path=/login/**,/logout/**,/signup/**

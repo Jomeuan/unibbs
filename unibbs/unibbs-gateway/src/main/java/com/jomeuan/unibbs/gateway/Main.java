@@ -1,4 +1,4 @@
-package com.jomeuan;
+package com.jomeuan.unibbs.gateway;
 
 public class Main {
     public static void main(String[] args) {

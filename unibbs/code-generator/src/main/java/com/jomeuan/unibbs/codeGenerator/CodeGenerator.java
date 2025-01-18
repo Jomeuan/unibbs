@@ -6,7 +6,6 @@ import org.apache.ibatis.type.JdbcType;
 
 import com.baomidou.mybatisplus.generator.FastAutoGenerator;
 import com.baomidou.mybatisplus.generator.config.rules.DbColumnType;
-import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 
 public class CodeGenerator {
         public static void main(String[] args) {
@@ -16,7 +15,7 @@ public class CodeGenerator {
                                 .globalConfig(builder -> builder
                                                 .author("jomeuan")
                                                 .outputDir(Paths.get(System.getProperty("user.dir"))
-                                                                + "/unibbs/src/main/java")
+                                                                + "/unibbs")
                                                 .commentDate("yyyy-MM-dd"))
                                 .dataSourceConfig(builder -> builder
                                                 .typeConvertHandler((globalConfig, typeRegistry, metaInfo) -> {

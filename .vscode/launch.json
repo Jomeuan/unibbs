@@ -2,6 +2,20 @@
     "configurations": [
         {
             "type": "java",
+            "name": "UnibbsForumApplication",
+            "request": "launch",
+            "mainClass": "com.jomeuan.unibbs.forum.UnibbsForumApplication",
+            "projectName": "unibbs-forum"
+        },
+        {
+            "type": "java",
+            "name": "UnibbsSecurityApplication",
+            "request": "launch",
+            "mainClass": "UnibbsSecurityApplication",
+            "projectName": "unibbs"
+        },
+        {
+            "type": "java",
             "name": "JwtTest",
             "request": "launch",
             "mainClass": "com.jomeuan.unibbs.security.JwtTest",
@@ -24,6 +38,27 @@
             "cwd": "${workspaceFolder}",
             "mainClass": "com.jomeuan.unibbs.security.UnibbsSecurityApplication",
             "projectName": "security",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-UnibbsSecurityApplication<unibbs-security>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.jomeuan.unibbs.security.UnibbsSecurityApplication",
+            "projectName": "unibbs-security",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=4998 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=unibbs-security"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-Main<unibbs-forum>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "src.main.java.com.jomeuan.Main",
+            "projectName": "unibbs-forum",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
         }
