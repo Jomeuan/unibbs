@@ -2,44 +2,10 @@
     "configurations": [
         {
             "type": "java",
-            "name": "UnibbsForumApplication",
+            "name": "LangTest",
             "request": "launch",
-            "mainClass": "com.jomeuan.unibbs.forum.UnibbsForumApplication",
-            "projectName": "unibbs-forum"
-        },
-        {
-            "type": "java",
-            "name": "UnibbsSecurityApplication",
-            "request": "launch",
-            "mainClass": "UnibbsSecurityApplication",
-            "projectName": "unibbs"
-        },
-        {
-            "type": "java",
-            "name": "JwtTest",
-            "request": "launch",
-            "mainClass": "com.jomeuan.unibbs.security.JwtTest",
-            "projectName": "security"
-        },
-        {
-            "type": "java",
-            "name": "Spring Boot-UnibbsApplication<unibbs>",
-            "request": "launch",
-            "cwd": "${workspaceFolder}",
-            "mainClass": "com.jomeuan.unibbs.UnibbsApplication",
-            "projectName": "unibbs",
-            "args": "",
-            "envFile": "${workspaceFolder}/.env"
-        },
-        {
-            "type": "java",
-            "name": "Spring Boot-UnibbsSecurityApplication<security>",
-            "request": "launch",
-            "cwd": "${workspaceFolder}",
-            "mainClass": "com.jomeuan.unibbs.security.UnibbsSecurityApplication",
-            "projectName": "security",
-            "args": "",
-            "envFile": "${workspaceFolder}/.env"
+            "mainClass": "LangTest",
+            "projectName": ""
         },
         {
             "type": "java",
@@ -54,11 +20,31 @@
         },
         {
             "type": "java",
-            "name": "Spring Boot-Main<unibbs-forum>",
+            "name": "Spring Boot-UnibbsProfileApplication<unibbs-profile>",
             "request": "launch",
             "cwd": "${workspaceFolder}",
-            "mainClass": "src.main.java.com.jomeuan.Main",
+            "mainClass": "com.jomeuan.unibbs.profile.UnibbsProfileApplication",
+            "projectName": "unibbs-profile",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-UnibbsForumApplication<unibbs-forum>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.jomeuan.unibbs.forum.UnibbsForumApplication",
             "projectName": "unibbs-forum",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-UnibbsGatewayApplication<unibbs-gateway>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.jomeuan.unibbs.gateway.UnibbsGatewayApplication",
+            "projectName": "unibbs-gateway",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
         }

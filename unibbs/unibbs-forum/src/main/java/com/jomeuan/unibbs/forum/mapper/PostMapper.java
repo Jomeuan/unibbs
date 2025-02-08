@@ -3,17 +3,16 @@ package com.jomeuan.unibbs.forum.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.One;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Result;
+import org.apache.ibatis.annotations.Results;
+import org.apache.ibatis.annotations.Select;
 
-import com.jomeuan.unibbs.forum.entity.domain.PostDo;
+import com.jomeuan.unibbs.forum.domain.PostDo;
+import com.jomeuan.unibbs.forum.entity.ActionPo;
+import com.jomeuan.unibbs.forum.vo.PostVo;
 
 public interface PostMapper {
-    /**
-     * 根据 targetId 查找action对应的所有评论comment及其内容
-     */
-    List<PostDo> selectPostByActionId(
-        @Param("actionId") Long actionId,
-        @Param("key")String key,
-        @Param("isAsc")boolean isAsc
-    );
+    
 }

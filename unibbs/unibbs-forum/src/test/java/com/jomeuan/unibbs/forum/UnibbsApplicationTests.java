@@ -1,45 +1,25 @@
 package com.jomeuan.unibbs.forum;
 
-import java.time.LocalDateTime;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.jomeuan.unibbs.forum.controller.PostController;
-import com.jomeuan.unibbs.forum.controller.UserController;
-import com.jomeuan.unibbs.forum.entity.Action;
-import com.jomeuan.unibbs.forum.entity.User;
-import com.jomeuan.unibbs.forum.entity.domain.PostDo;
-import com.jomeuan.unibbs.forum.service.IActionService;
-import com.jomeuan.unibbs.forum.service.IPostService;
-import com.jomeuan.unibbs.forum.service.IUserService;
+import com.jomeuan.unibbs.forum.service.PostService;
 import com.jomeuan.unibbs.forum.util.IdGenerator;
-import com.jomeuan.unibbs.forum.vo.BasicUserVo;
-import com.jomeuan.unibbs.forum.vo.PostVo;
 
 @SpringBootTest
 class UnibbsApplicationTests {
-    @Autowired
-    IActionService actionService;
 
     @Autowired
     IdGenerator idGenerator;
 
-    @Autowired
-    IUserService userService;
 
-    @Autowired 
+    @Autowired
     PostController postController;
 
     @Autowired
-    IPostService postService;
-
-    @Test
-    void contextLoads() {
-        System.out.println(actionService);
-    }
+    PostService postService;
 
     @Test
     void idTest() {
@@ -48,39 +28,8 @@ class UnibbsApplicationTests {
     }
 
     @Test
-    void registerTest() {
-        BasicUserVo userVo = new BasicUserVo();
-        userVo.setName("user1");
-        userVo.setAccount("111");
-        userVo.setPassword("123456");
-        userService.register(userVo);    
-    }
+    void publishPostTest() {
 
-    @Test
-    void publishPostTest(){
-        Long userId = userService.getOne(new QueryWrapper<User>().eq("name","user1")).getId();
-        // 第一个是发文
-        PostVo article =new PostVo();
-        article.setUserId(userId);
-        article.setType(Action.ActionType.COMMENT.name());
-        article.setTargetId(1L);
-        article.setTime(LocalDateTime.now());
-        article.setContent("这是user1的发文 time: " + article.getTime().toString());
-        
-        article=new PostVo(postService.save(article.toPostBo()));
-        //5个对发文的评论
-        for(int i=0; i<5; i++){
-            PostVo comment = new PostVo();
-            // comment.setUserId(userId);
-            comment.setType(Action.ActionType.COMMENT.name());
-            comment.setContent("这是user1的第" + (i+1) + "个评论");
-            comment.setTime(LocalDateTime.now());
-            comment.setTargetId(article.getActionId());
-            postController.publishcomment(comment);
-        }
-
-        System.out.println(article.getActionId());
     }
-        
 
 }

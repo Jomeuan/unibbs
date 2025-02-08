@@ -11,10 +11,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.jomeuan.unibbs.security.entity.Role;
-import com.jomeuan.unibbs.security.entity.User;
-import com.jomeuan.unibbs.security.entity.UserRole;
+import com.jomeuan.unibbs.security.entity.RolePo;
+import com.jomeuan.unibbs.security.entity.UserPo;
+import com.jomeuan.unibbs.security.entity.UserRolePo;
 import com.jomeuan.unibbs.security.mapper.RoleMapper;
 import com.jomeuan.unibbs.security.mapper.UserMapper;
 import com.jomeuan.unibbs.security.mapper.UserRoleMapper;
@@ -28,18 +29,20 @@ public class UserDetailsServiceImpl implements UserDetailsService{
     private UserRoleMapper userRoleMapper;
     @Autowired
     private RoleMapper roleMapper;
+    
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userMapper.selectOne(new QueryWrapper<User>().eq("account", username));
+    public UserDetails loadUserByUsername(String userAccount) throws UsernameNotFoundException {
+        UserPo user = userMapper.selectOne(new QueryWrapper<UserPo>().eq("account", userAccount));
         if (user == null) {
-            throw new UsernameNotFoundException("User not found: " + username);
+            throw new UsernameNotFoundException("User not found: " + userAccount);
         }
         List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 
-        Long roleId=userRoleMapper.selectOne(new QueryWrapper<UserRole>().eq("user_id", user.getId())).getRoleId();
-        Role role = roleMapper.selectById(roleId);
-        authorities.add(new SimpleGrantedAuthority("ROLE_"+role.getName()));
+        for( UserRolePo userRolePo:userRoleMapper.selectList(new LambdaQueryWrapper<UserRolePo>().eq(UserRolePo::getUserId, user.getId()))){
+            RolePo role = roleMapper.selectById(userRolePo.getRoleId());
+            authorities.add(new SimpleGrantedAuthority("ROLE_"+role.getName()));
+        }
 
-        return new org.springframework.security.core.userdetails.User(username,user.getPassword(),authorities);
+        return new org.springframework.security.core.userdetails.User(userAccount,user.getPassword(),authorities);
     }
 }

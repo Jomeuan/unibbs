@@ -10,7 +10,7 @@ import com.baomidou.mybatisplus.generator.config.rules.DbColumnType;
 public class CodeGenerator {
         public static void main(String[] args) {
                 FastAutoGenerator.create(
-                                "jdbc:mysql://localhost:3307/uni_bbs?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true",
+                                "jdbc:mysql://localhost:3306/uni_bbs?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true",
                                 "root", "123456")
                                 .globalConfig(builder -> builder
                                                 .author("jomeuan")

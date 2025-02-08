@@ -6,9 +6,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.jomeuan.unibbs.security.domain.Roles;
 import com.jomeuan.unibbs.security.domain.UserAuthentication;
-import com.jomeuan.unibbs.security.entity.Role;
-import com.jomeuan.unibbs.security.service.impl.JWTServiceImpl;
+import com.jomeuan.unibbs.security.entity.RolePo;
+import com.jomeuan.unibbs.security.entity.UserPo;
+import com.jomeuan.unibbs.security.service.impl.JWTService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -17,16 +19,23 @@ import lombok.extern.slf4j.Slf4j;
 public class JwtTest {
 
     @Autowired
-    JWTServiceImpl  jwtService;
+    JWTService  jwtService;
 
     @Test
     void buildJWTTest() throws Exception {
         UserAuthentication res = new UserAuthentication();
-        res.setUserId(1L);
-        res.setAccount("111");
-        res.setName("John");
-        res.setRoles(List.of(new Role(1L,"admin")));
+        res.setUser(new UserPo());
+        res.getUser().setId(1L);
+        res.getUser().setAccount("111");
+        res.setRoles(List.of(Roles.VISITOR_ROLE));
 
-        log.info(jwtService.buildJWT(res));
+        String jwt = jwtService.buildJWT("userAuthentication",res);
+        log.info("****************");
+        log.info(jwt);
+        
+        // 验证 JWT
+        res=jwtService.parseJWT(jwt);
+        log.info(res.getUser().getAccount());
+
     }
 }

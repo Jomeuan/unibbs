@@ -1,0 +1,1 @@
+docker run -p 8091:8091 -p 7091:7091 seataio/seata-server:1.5.0 -e 

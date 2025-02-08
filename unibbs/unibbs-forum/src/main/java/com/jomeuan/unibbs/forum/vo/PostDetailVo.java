@@ -2,8 +2,6 @@ package com.jomeuan.unibbs.forum.vo;
 
 import java.util.List;
 
-import com.jomeuan.unibbs.forum.bo.PostBo;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,16 +10,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PostDetailVo {
-    private PostVo postVo;
+    private PostVo post;
     //只有第一级的评论是list(显示很多个),第二级为贴主的回复
-    private List<PostDetailVo.Comment> comments;
+    private List<PostDetailVo> comments;
 
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class Comment{
-        private PostVo postVo;
-        //对postvo的评论
-        private PostDetailVo.Comment comment;
-    }
 }

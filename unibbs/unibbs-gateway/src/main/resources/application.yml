@@ -1,11 +1,18 @@
-server:
-  port: 9999
-
 spring:
   cloud:
     gateway:
       routes:
-      - id: login_jwt
+      - id: unibbs-security
         uri: lb://unibbs-security
+        # uri: http://localhost:9010
         predicates:
-        - path=/login/**,/logout/**,/signup/**
+        - Path=/security/**,/login/**
+      - id: profile-route
+        uri: lb://unibbs-profile
+        predicates:
+        - Path=/profile/**
+      - id: forum-route
+        uri: lb://unibbs-forum
+        predicates:
+        - Path=/post/**,/community/**
+      

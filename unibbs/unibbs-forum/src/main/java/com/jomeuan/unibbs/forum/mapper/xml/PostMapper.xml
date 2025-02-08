@@ -1,29 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jomeuan.unibbs.forum.mapper.ActionMapper">
-    <resultMap id="postMap" type="com.jomeuan.unibbs.forum.entity.domain.PostDo">
-        <id property="actionId" column="action.id"></id>
-        <result property="userId" column="action.user_id"></result>
-    </resultMap>
-    <select id="selectPostByActionId"> 
-        select action.*,comment.* from `action`  
-        inner join `comment` on action.content_id=comment.id 
-        where action.type=1 and action.target_id=#{actionId} <choose>
-            <when test="key == 'time'"> order by action.time <if
-                    test="isAsc!=true">desc</if>
-            </when>
-            <when test="key == likes"> order by comment.likes_count <if
-                    test="isAsc!=true">
-                    desc</if>
-            </when>
-            <when test="key == collects"> order by
-                comment.collects_count <if test="isAsc!=true">desc</if>
-            </when>
-            <when test="key==comments"> order
-                by comment.comments_count <if test="isAsc!=true">desc</if>
-            </when>
-        </choose>
-        ; 
-    </select>
+    
 
 </mapper>

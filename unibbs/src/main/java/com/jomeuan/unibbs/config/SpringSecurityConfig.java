@@ -10,7 +10,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.Customizer;
 
-@EnableMethodSecurity
+
+@EnableMethodSecurity(securedEnabled = true)
 @Configuration
 public class SpringSecurityConfig {
 
@@ -34,7 +35,8 @@ public class SpringSecurityConfig {
 
         http.authorizeHttpRequests(
                 (authorizeHttpRequests) -> authorizeHttpRequests
-                        .requestMatchers("/login/**").permitAll()
+                        .requestMatchers("/post/**").permitAll()
+                        .requestMatchers("/user/register").permitAll()
                         .anyRequest().authenticated());
         http.formLogin(Customizer.withDefaults());
         http.csrf((csrf) -> csrf.disable());

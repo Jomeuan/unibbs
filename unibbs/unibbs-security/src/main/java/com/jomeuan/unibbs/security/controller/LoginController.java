@@ -4,22 +4,30 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jomeuan.unibbs.security.domain.UserAuthentication;
-import com.jomeuan.unibbs.security.service.impl.JWTServiceImpl;
-import com.jomeuan.unibbs.security.vo.BasicUserVo;
+import com.jomeuan.unibbs.security.entity.UserPo;
+import com.jomeuan.unibbs.security.service.impl.JWTService;
+import com.jomeuan.unibbs.security.service.impl.UserAuthenticationService;
+import com.jomeuan.unibbs.security.vo.JWTVo;
+import com.jomeuan.unibbs.security.vo.R;
+import com.jomeuan.unibbs.security.vo.UserVo;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RestController
 public class LoginController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private JWTServiceImpl jwtService;
+    private JWTService jwtService;
+    @Autowired
+    UserAuthenticationService userAndRoleService;
 
     /**
      * 因为在springSecurityConfig中设定了permitall,所以是无过滤的进入到此函数中,
@@ -28,20 +36,26 @@ public class LoginController {
      * authenticate()函数最后通过UserDetailsServiceImpl.loadUserByUsername()获取到userDetail
      */
     @PostMapping("/login/jwt")
-    public String login(@RequestBody BasicUserVo basicUserVo) {
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(basicUserVo.getAccount(),
-                basicUserVo.getPassword());
+    public Object login(@RequestBody UserVo userVo) {
+        UserPo userPo = userVo.getUser();
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(userPo.getAccount(),
+                userPo.getPassword());
+
         Authentication authenticate = authenticationManager.authenticate(token);
 
-        // return "hello";
         if (authenticate != null && authenticate.isAuthenticated()) {
             // 登录成功
-            UserAuthentication userAuthentication = jwtService.getUserAuthentication(basicUserVo.getAccount());
-            return jwtService.buildJWT(userAuthentication);
+            UserAuthentication userAuthentication = userAndRoleService.getUserAuthentication(userPo.getAccount());
+            // 不显示密码
+            userAuthentication.getUser().setPassword(null);
+            JWTVo res = new JWTVo(userAuthentication.getUser(),
+                    jwtService.buildJWT("userAuthentication", userAuthentication));
+            return R.ok(res);
         } else {
-            System.out.println("账号与密码出错");
-            throw new RuntimeException("账号与密码出错");
-        }
+            //TODO:test
 
+            return R.error("账号与密码出错");
+        }
     }
+
 }

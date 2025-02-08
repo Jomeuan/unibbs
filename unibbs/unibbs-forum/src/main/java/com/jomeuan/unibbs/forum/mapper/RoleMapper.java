@@ -1,11 +1,11 @@
 package com.jomeuan.unibbs.forum.mapper;
 
-import com.jomeuan.unibbs.forum.entity.Action;
-import com.jomeuan.unibbs.forum.entity.Role;
+import com.jomeuan.unibbs.forum.entity.ActionPo;
+import com.jomeuan.unibbs.forum.entity.RolePo;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 
-public interface RoleMapper  extends BaseMapper<Role> {
+public interface RoleMapper  extends BaseMapper<RolePo> {
 
 }
