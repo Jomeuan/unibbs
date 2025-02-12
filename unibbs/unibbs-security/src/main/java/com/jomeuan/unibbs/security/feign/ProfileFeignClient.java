@@ -7,8 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.jomeuan.unibbs.security.entity.ProfilePo;
-import com.jomeuan.unibbs.security.vo.UserVo;
+import com.jomeuan.unibbs.entity.ProfilePo;
 
 @FeignClient(name = "unibbs-profile", url = "http://localhost:9999")
 public interface ProfileFeignClient {

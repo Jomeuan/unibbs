@@ -1,17 +1,14 @@
 package com.jomeuan.unibbs.forum.mapper;
 
-import com.jomeuan.unibbs.forum.domain.PostMapperOrder;
-import com.jomeuan.unibbs.forum.entity.ActionPo;
-import com.jomeuan.unibbs.forum.vo.PostVo;
+import com.jomeuan.unibbs.domain.PostMapperOrder;
+import com.jomeuan.unibbs.entity.ActionPo;
+import com.jomeuan.unibbs.vo.PostVo;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.type.EnumOrdinalTypeHandler;
-
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 public interface ActionMapper extends BaseMapper<ActionPo> {

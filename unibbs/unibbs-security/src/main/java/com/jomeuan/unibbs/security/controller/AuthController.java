@@ -4,30 +4,28 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.jomeuan.unibbs.security.domain.Roles;
-import com.jomeuan.unibbs.security.domain.UserAuthentication;
-import com.jomeuan.unibbs.security.entity.ProfilePo;
-import com.jomeuan.unibbs.security.entity.RolePo;
-import com.jomeuan.unibbs.security.entity.UserPo;
-import com.jomeuan.unibbs.security.entity.UserRolePo;
+import com.jomeuan.unibbs.domain.Roles;
+import com.jomeuan.unibbs.domain.UserAuthentication;
+import com.jomeuan.unibbs.entity.ProfilePo;
+import com.jomeuan.unibbs.entity.RolePo;
+import com.jomeuan.unibbs.entity.UserPo;
+import com.jomeuan.unibbs.entity.UserRolePo;
 import com.jomeuan.unibbs.security.feign.ProfileFeignClient;
 import com.jomeuan.unibbs.security.mapper.RoleMapper;
 import com.jomeuan.unibbs.security.mapper.UserMapper;
 import com.jomeuan.unibbs.security.mapper.UserRoleMapper;
-import com.jomeuan.unibbs.security.service.impl.JWTService;
-import com.jomeuan.unibbs.security.service.impl.UserAndProfileService;
-import com.jomeuan.unibbs.security.service.impl.UserAuthenticationService;
-import com.jomeuan.unibbs.security.util.IdGenerator;
-import com.jomeuan.unibbs.security.vo.R;
-import com.jomeuan.unibbs.security.vo.UserVo;
+import com.jomeuan.unibbs.security.service.UserAndProfileService;
+import com.jomeuan.unibbs.security.service.UserAuthenticationService;
+import com.jomeuan.unibbs.util.IdGenerator;
+import com.jomeuan.unibbs.util.JWTService;
+import com.jomeuan.unibbs.vo.R;
+import com.jomeuan.unibbs.vo.UserVo;
 
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.access.annotation.Secured;
@@ -37,9 +35,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
 @RequestMapping("/security/auth")
@@ -49,6 +44,7 @@ public class AuthController {
     IdGenerator idGenerator;
     @Autowired
     PasswordEncoder passwordEncoder;
+
     @Autowired
     UserAuthenticationService userAuthenticationService;
     @Autowired

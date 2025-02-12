@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,33 +19,29 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.jomeuan.unibbs.forum.domain.ActionType;
-import com.jomeuan.unibbs.forum.domain.CommunityDo;
-import com.jomeuan.unibbs.forum.domain.Roles;
-import com.jomeuan.unibbs.forum.entity.ActionPo;
-import com.jomeuan.unibbs.forum.entity.CommunityContentPo;
-import com.jomeuan.unibbs.forum.entity.ModeratorPo;
-import com.jomeuan.unibbs.forum.entity.ProfilePo;
+import com.jomeuan.unibbs.domain.ActionType;
+import com.jomeuan.unibbs.domain.CommunityDo;
+import com.jomeuan.unibbs.domain.Roles;
+import com.jomeuan.unibbs.entity.ActionPo;
+import com.jomeuan.unibbs.entity.CommunityContentPo;
+import com.jomeuan.unibbs.entity.ModeratorPo;
 import com.jomeuan.unibbs.forum.feign.ProfileFeignClient;
 import com.jomeuan.unibbs.forum.mapper.ActionMapper;
 import com.jomeuan.unibbs.forum.mapper.CommunityContentMapper;
 import com.jomeuan.unibbs.forum.mapper.ModeratorMapper;
 import com.jomeuan.unibbs.forum.mapper.PostMapper;
 import com.jomeuan.unibbs.forum.service.CommunityService;
-import com.jomeuan.unibbs.forum.service.JWTService;
 import com.jomeuan.unibbs.forum.service.PostService;
-import com.jomeuan.unibbs.forum.util.IdGenerator;
-import com.jomeuan.unibbs.forum.vo.CommunityDetailVo;
-import com.jomeuan.unibbs.forum.vo.ModeratorVo;
-import com.jomeuan.unibbs.forum.vo.PostVo;
-import com.jomeuan.unibbs.forum.vo.R;
+import com.jomeuan.unibbs.util.IdGenerator;
+import com.jomeuan.unibbs.util.JWTService;
+import com.jomeuan.unibbs.vo.CommunityDetailVo;
+import com.jomeuan.unibbs.vo.ModeratorVo;
+import com.jomeuan.unibbs.vo.R;
 
-import jakarta.websocket.server.PathParam;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
 @Slf4j
 @RestController
@@ -68,8 +63,6 @@ public class CommunityController {
     private ModeratorMapper moderatorMapper;
     @Autowired
     private ActionMapper actionMapper;
-    @Autowired
-    private PostMapper postMapper;
 
     @Autowired
     private ProfileFeignClient profileFeignClient;

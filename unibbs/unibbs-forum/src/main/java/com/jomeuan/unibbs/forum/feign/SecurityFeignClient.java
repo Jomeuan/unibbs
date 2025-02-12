@@ -4,7 +4,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import com.jomeuan.unibbs.forum.domain.UserAuthentication;
+import com.jomeuan.unibbs.domain.UserAuthentication;
 
 @FeignClient(name = "unibbs-security", url = "http://localhost:9999")
 public interface SecurityFeignClient {

@@ -4,7 +4,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Update;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.jomeuan.unibbs.forum.entity.CommentPo;
+import com.jomeuan.unibbs.entity.CommentPo;
 
 /**
  * <p>

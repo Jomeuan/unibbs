@@ -6,10 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.jomeuan.unibbs.forum.domain.PostDo;
-import com.jomeuan.unibbs.forum.domain.PostMapperOrder;
-import com.jomeuan.unibbs.forum.entity.ActionPo;
-import com.jomeuan.unibbs.forum.vo.PostVo;
+import com.jomeuan.unibbs.domain.PostMapperOrder;
+import com.jomeuan.unibbs.vo.PostVo;
 
 import lombok.extern.slf4j.Slf4j;
 

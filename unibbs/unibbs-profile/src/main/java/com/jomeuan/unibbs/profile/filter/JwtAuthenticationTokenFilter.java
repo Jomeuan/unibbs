@@ -16,9 +16,9 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jomeuan.unibbs.profile.domain.UserAuthentication;
-import com.jomeuan.unibbs.profile.service.JWTService;
-import com.jomeuan.unibbs.profile.vo.R;
+import com.jomeuan.unibbs.domain.UserAuthentication;
+import com.jomeuan.unibbs.util.JWTService;
+import com.jomeuan.unibbs.vo.R;
 
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;

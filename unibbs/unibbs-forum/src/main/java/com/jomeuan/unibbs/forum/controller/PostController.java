@@ -20,29 +20,26 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PutMapping;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.jomeuan.unibbs.forum.domain.ActionType;
-import com.jomeuan.unibbs.forum.domain.LikeDo;
-import com.jomeuan.unibbs.forum.domain.PostDo;
-import com.jomeuan.unibbs.forum.domain.Roles;
-import com.jomeuan.unibbs.forum.entity.ActionPo;
-import com.jomeuan.unibbs.forum.entity.CommentPo;
+import com.jomeuan.unibbs.domain.ActionType;
+import com.jomeuan.unibbs.domain.LikeDo;
+import com.jomeuan.unibbs.domain.PostDo;
+import com.jomeuan.unibbs.domain.Roles;
+import com.jomeuan.unibbs.entity.ActionPo;
+import com.jomeuan.unibbs.entity.CommentPo;
 import com.jomeuan.unibbs.forum.mapper.ActionMapper;
 import com.jomeuan.unibbs.forum.mapper.CommentMapper;
 import com.jomeuan.unibbs.forum.mapper.CommunityContentMapper;
 import com.jomeuan.unibbs.forum.mapper.ModeratorMapper;
 import com.jomeuan.unibbs.forum.mapper.PostMapper;
 import com.jomeuan.unibbs.forum.service.CommunityService;
-import com.jomeuan.unibbs.forum.service.JWTService;
 import com.jomeuan.unibbs.forum.service.PostService;
-import com.jomeuan.unibbs.forum.util.IdGenerator;
-import com.jomeuan.unibbs.forum.vo.PostDetailVo;
-import com.jomeuan.unibbs.forum.vo.PostVo;
-import com.jomeuan.unibbs.forum.vo.R;
-
-import io.seata.sqlparser.struct.Null;
+import com.jomeuan.unibbs.util.IdGenerator;
+import com.jomeuan.unibbs.util.JWTService;
+import com.jomeuan.unibbs.vo.PostDetailVo;
+import com.jomeuan.unibbs.vo.PostVo;
+import com.jomeuan.unibbs.vo.R;
 
 /**
  * <p>
@@ -68,12 +65,6 @@ public class PostController {
     private ActionMapper actionMapper;
     @Autowired
     private CommentMapper commentMapper;
-    @Autowired
-    private PostMapper postMapper;
-    @Autowired
-    private CommunityContentMapper communityContentMapper;
-    @Autowired
-    private ModeratorMapper moderatorMapper;
 
     @Autowired
     CommunityService communityService;
@@ -122,7 +113,7 @@ public class PostController {
             action.setType(ActionType.COMMENT_BROADCAST);
             actionMapper.insert(action);
         } else
-            throw new IllegalArgumentException("Action type " + action.getType() + " is not supported");
+            throw new IllegalArgumentException("target Action type " + targetAction.getType() + " is not supported");
 
         PostVo res = new PostVo();
         res.setThisPost(post);

@@ -8,11 +8,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.jomeuan.unibbs.entity.ProfilePo;
+import com.jomeuan.unibbs.entity.UserPo;
 import com.jomeuan.unibbs.security.controller.AuthController;
-import com.jomeuan.unibbs.security.entity.ProfilePo;
-import com.jomeuan.unibbs.security.entity.UserPo;
 import com.jomeuan.unibbs.security.mapper.UserMapper;
-import com.jomeuan.unibbs.security.vo.UserVo;
+import com.jomeuan.unibbs.vo.UserVo;
 
 import lombok.extern.slf4j.Slf4j;
 

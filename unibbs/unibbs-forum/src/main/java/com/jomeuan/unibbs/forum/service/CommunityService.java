@@ -5,26 +5,23 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.jomeuan.unibbs.forum.domain.ActionType;
-import com.jomeuan.unibbs.forum.domain.CommunityDo;
-import com.jomeuan.unibbs.forum.domain.Roles;
-import com.jomeuan.unibbs.forum.domain.UserAuthentication;
-import com.jomeuan.unibbs.forum.entity.ActionPo;
-import com.jomeuan.unibbs.forum.entity.ModeratorPo;
-import com.jomeuan.unibbs.forum.entity.UserPo;
+import com.jomeuan.unibbs.domain.ActionType;
+import com.jomeuan.unibbs.domain.CommunityDo;
+import com.jomeuan.unibbs.domain.Roles;
+import com.jomeuan.unibbs.domain.UserAuthentication;
+import com.jomeuan.unibbs.entity.ActionPo;
+import com.jomeuan.unibbs.entity.ModeratorPo;
+import com.jomeuan.unibbs.entity.UserPo;
 import com.jomeuan.unibbs.forum.feign.SecurityFeignClient;
 import com.jomeuan.unibbs.forum.mapper.ActionMapper;
 import com.jomeuan.unibbs.forum.mapper.CommunityContentMapper;
 import com.jomeuan.unibbs.forum.mapper.ModeratorMapper;
 import com.jomeuan.unibbs.forum.mapper.PostMapper;
-import com.jomeuan.unibbs.forum.vo.ModeratorVo;
-import com.jomeuan.unibbs.forum.vo.R;
-
+import com.jomeuan.unibbs.vo.ModeratorVo;
 import io.seata.spring.annotation.GlobalTransactional;
 
 @Service

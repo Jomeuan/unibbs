@@ -9,9 +9,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.jomeuan.unibbs.forum.entity.RolePo;
-import com.jomeuan.unibbs.forum.entity.UserPo;
-import com.jomeuan.unibbs.forum.entity.UserRolePo;
+import com.jomeuan.unibbs.entity.RolePo;
+import com.jomeuan.unibbs.entity.UserPo;
+import com.jomeuan.unibbs.entity.UserRolePo;
 import com.jomeuan.unibbs.forum.mapper.RoleMapper;
 import com.jomeuan.unibbs.forum.mapper.UserMapper;
 import com.jomeuan.unibbs.forum.mapper.UserRoleMapper;

@@ -3,10 +3,10 @@ package com.jomeuan.unibbs.profile.controller;
 import org.springframework.web.bind.annotation.RestController;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.jomeuan.unibbs.profile.domain.Roles;
-import com.jomeuan.unibbs.profile.entity.ProfilePo;
+import com.jomeuan.unibbs.domain.Roles;
+import com.jomeuan.unibbs.entity.ProfilePo;
 import com.jomeuan.unibbs.profile.mapper.ProfileMapper;
-import com.jomeuan.unibbs.profile.vo.R;
+import com.jomeuan.unibbs.vo.R;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;

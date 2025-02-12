@@ -6,8 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.jomeuan.unibbs.entity.ProfilePo;
 import com.jomeuan.unibbs.profile.controller.ProfileController;
-import com.jomeuan.unibbs.profile.entity.ProfilePo;
 
 import lombok.extern.slf4j.Slf4j;
 

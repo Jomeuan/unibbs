@@ -8,13 +8,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jomeuan.unibbs.security.domain.UserAuthentication;
-import com.jomeuan.unibbs.security.entity.UserPo;
-import com.jomeuan.unibbs.security.service.impl.JWTService;
-import com.jomeuan.unibbs.security.service.impl.UserAuthenticationService;
-import com.jomeuan.unibbs.security.vo.JWTVo;
-import com.jomeuan.unibbs.security.vo.R;
-import com.jomeuan.unibbs.security.vo.UserVo;
+import com.jomeuan.unibbs.domain.UserAuthentication;
+import com.jomeuan.unibbs.entity.UserPo;
+import com.jomeuan.unibbs.security.service.UserAuthenticationService;
+import com.jomeuan.unibbs.util.JWTService;
+import com.jomeuan.unibbs.vo.JWTVo;
+import com.jomeuan.unibbs.vo.R;
+import com.jomeuan.unibbs.vo.UserVo;
 
 import lombok.extern.slf4j.Slf4j;
 

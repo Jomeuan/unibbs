@@ -19,6 +19,7 @@
 		<module>unibbs-gateway</module>
 		<module>unibbs-forum</module>
 		<module>unibbs-profile</module>
+		<module>unibbs-common</module>
 	</modules>
 
 	<name>unibbs</name>
