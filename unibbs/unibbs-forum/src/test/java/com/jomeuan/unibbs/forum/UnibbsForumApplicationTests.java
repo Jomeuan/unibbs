@@ -3,6 +3,7 @@ package com.jomeuan.unibbs.forum;
 import java.time.Duration;
 
 import org.junit.jupiter.api.Test;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cache.annotation.EnableCaching;
@@ -76,6 +77,17 @@ class UnibbsForumApplicationTests {
         threadPo.setId(idGenerator.nextId());
         threadPo.setTitle("测试common");
         threadMapper.insert(threadPo);
+    }
+
+    @Autowired RedissonClient redissonClient;
+
+    @Test
+    public void redissonTest() {
+
+        log.info("********************************");
+        //获取所有的key
+        redissonClient.getKeys().getKeys().forEach(key -> log.info(key));
+
     }
 
 

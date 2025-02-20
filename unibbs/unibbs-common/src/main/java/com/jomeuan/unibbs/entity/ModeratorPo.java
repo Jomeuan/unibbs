@@ -2,8 +2,6 @@ package com.jomeuan.unibbs.entity;
 
 import java.io.Serializable;
 
-import org.apache.ibatis.type.Alias;
-
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 

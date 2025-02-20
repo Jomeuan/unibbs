@@ -1,7 +1,5 @@
 package com.jomeuan.unibbs.domain;
 
-import org.springframework.util.Assert;
-
 import com.jomeuan.unibbs.entity.ActionPo;
 
 import lombok.AllArgsConstructor;

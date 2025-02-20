@@ -22,6 +22,11 @@ public class UserAndProfileService {
     @Autowired
     private ProfileFeignClient profileFeignClient;
     
+    /**
+     * 保存UserAuthentication 和 profile
+     * @param userVo
+     * @throws RuntimeException
+     */
     @GlobalTransactional
     public void saveUserVo(@RequestBody UserVo userVo) throws RuntimeException {
         UserAuthentication userAuthentication = new UserAuthentication(userVo.getUser(), userVo.getRoles());

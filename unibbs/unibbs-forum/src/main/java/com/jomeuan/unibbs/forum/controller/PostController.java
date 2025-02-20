@@ -2,12 +2,14 @@ package com.jomeuan.unibbs.forum.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.lang.ProcessBuilder.Redirect.Type;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -28,11 +30,9 @@ import com.jomeuan.unibbs.domain.PostDo;
 import com.jomeuan.unibbs.domain.Roles;
 import com.jomeuan.unibbs.entity.ActionPo;
 import com.jomeuan.unibbs.entity.CommentPo;
+import com.jomeuan.unibbs.exception.AppException;
 import com.jomeuan.unibbs.forum.mapper.ActionMapper;
 import com.jomeuan.unibbs.forum.mapper.CommentMapper;
-import com.jomeuan.unibbs.forum.mapper.CommunityContentMapper;
-import com.jomeuan.unibbs.forum.mapper.ModeratorMapper;
-import com.jomeuan.unibbs.forum.mapper.PostMapper;
 import com.jomeuan.unibbs.forum.service.CommunityService;
 import com.jomeuan.unibbs.forum.service.PostService;
 import com.jomeuan.unibbs.util.IdGenerator;
@@ -71,13 +71,13 @@ public class PostController {
 
     /**
      * 用户发文/评论
+     * 并不需要上锁
      * 
      * @return PostVo with postDo and targetPostDo
      */
     @Secured(Roles.VISITOR_ROLE_NAME)
-    @Transactional
     @PostMapping("")
-    public Object publishPost(@RequestBody PostDo post, @RequestHeader("token") String jwt) {
+    public ResponseEntity<PostVo> publishPost(@RequestBody PostDo post, @RequestHeader("token") String jwt) {
         try {
             Assert.notNull(post.getComment(), "comment cannot be null");
             Assert.notNull(post.getAction().getTargetId(), "TargetId cannot be null");
@@ -86,40 +86,28 @@ public class PostController {
             Assert.isTrue(
                     post.getAction().getType() == ActionType.COMMENT
                             || post.getAction().getType() == ActionType.COMMENT_BROADCAST,
-                    "action type should be 1 or 6");
+                    "action type should be COMMENT or COMMENT_BROADCAST");
         } catch (IllegalArgumentException | NullPointerException e) {
-            return R.error(e.getMessage());
+            e.printStackTrace();
+            throw new AppException(e);
         }
 
-        ActionPo action = post.getAction();
-        CommentPo comment = post.getComment();
-        comment.setId(idGenerator.nextId());
-        // 插入content
-        commentMapper.insert(comment);
-        action.setContentId(comment.getId());
-        action.setId(idGenerator.nextId());
-        action.setTime(LocalDateTime.now());
+        try{
+            // 保存post
+            post=postService.savePost(post);
+        }catch(IllegalArgumentException | NullPointerException e){
+            e.printStackTrace();
+            throw new AppException(e);
+        }
 
-        ActionPo targetAction = actionMapper.selectById(action.getTargetId());
-
-        // 判断actionType :COMMENT_BROADCAST/COMMENT
-        if (targetAction.getType() == ActionType.COMMENT || targetAction.getType() == ActionType.COMMENT_BROADCAST) {
-            action.setType(ActionType.COMMENT);
-            actionMapper.insert(action);
-            // 如果是COMMENT,要给评论对象的commentsCount+=1
-            commentMapper.update(Wrappers.lambdaUpdate(CommentPo.class)
-                    .eq(CommentPo::getId, targetAction.getContentId()).setIncrBy(CommentPo::getCommentsCount, 1));
-        } else if (targetAction.getType() == ActionType.COMMUNITY) {
-            action.setType(ActionType.COMMENT_BROADCAST);
-            actionMapper.insert(action);
-        } else
-            throw new IllegalArgumentException("target Action type " + targetAction.getType() + " is not supported");
 
         PostVo res = new PostVo();
         res.setThisPost(post);
-        res.setTargetPost(new PostDo(targetAction, commentMapper.selectById(targetAction.getContentId())));
+        if(post.getAction().getType()==ActionType.COMMENT){
+            res.setTargetPost(postService.getPostDoByActionId(post.getAction().getTargetId()));
+        }
 
-        return R.ok(res);
+        return ResponseEntity.ok(res);
     }
 
     /**

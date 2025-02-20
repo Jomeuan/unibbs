@@ -12,7 +12,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.jomeuan.unibbs.profile.filter.JwtAuthenticationTokenFilter;
 
-import org.springframework.security.config.Customizer;
 
 @EnableMethodSecurity(securedEnabled = true)
 @Configuration

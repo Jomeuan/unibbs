@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Configuration;
 
 
 @Configuration
-@ComponentScan({"com.jomeuan.unibbs.util"})
+@ComponentScan({"com.jomeuan.unibbs.util","com.jomeuan.unibbs.exception"})
 public class AppConfiguration {
     
 }

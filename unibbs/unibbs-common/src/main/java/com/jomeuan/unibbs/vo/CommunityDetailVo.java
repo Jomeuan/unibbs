@@ -3,9 +3,6 @@ package com.jomeuan.unibbs.vo;
 import java.util.List;
 
 import com.jomeuan.unibbs.entity.CommunityContentPo;
-import com.jomeuan.unibbs.entity.ModeratorPo;
-
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

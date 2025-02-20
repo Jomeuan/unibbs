@@ -1,10 +1,17 @@
 package com.jomeuan.unibbs.forum.service;
 
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.baomidou.mybatisplus.core.toolkit.Assert;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.jomeuan.unibbs.domain.ActionType;
 import com.jomeuan.unibbs.domain.PostDo;
+import com.jomeuan.unibbs.entity.ActionPo;
+import com.jomeuan.unibbs.entity.CommentPo;
 import com.jomeuan.unibbs.forum.mapper.ActionMapper;
 import com.jomeuan.unibbs.forum.mapper.CommentMapper;
 import com.jomeuan.unibbs.util.IdGenerator;
@@ -16,13 +23,12 @@ public class PostService {
     @Autowired
     private IdGenerator idGenerator;
 
-    
-
     @Autowired
     private ActionMapper actionMapper;
     @Autowired
     private CommentMapper commentMapper;
 
+    // TODO: 从redis 缓存中取
     public PostDo getPostDoByActionId(Long actionId) {
         PostDo res = new PostDo();
         res.setAction(actionMapper.selectById(actionId));
@@ -50,6 +56,48 @@ public class PostService {
             }
         }
         return res;
+    }
+
+    /**
+     * 
+     * @param postDo
+     */
+    @Transactional
+    public PostDo savePost(PostDo postDo) {
+        ActionPo action = postDo.getAction();
+        CommentPo comment = postDo.getComment();
+        comment.setId(idGenerator.nextId());
+        // 插入content
+        commentMapper.insert(comment);
+        action.setContentId(comment.getId());
+        action.setId(idGenerator.nextId());
+        action.setTime(LocalDateTime.now());
+
+        ActionPo targetAction = actionMapper.selectById(action.getTargetId());
+
+        if (action.getType() == ActionType.COMMENT) {
+            // 如果post.type是Comment,targetPost.type 为 COMMENT 或者 COMMENT_BROADCAST
+            Assert.isTrue(
+                    targetAction.getType() == ActionType.COMMENT
+                            || targetAction.getType() == ActionType.COMMENT_BROADCAST,
+                    "target action type error with type " + targetAction.getType());
+            actionMapper.insert(action);
+            // 如果是COMMENT,要给评论对象的commentsCount+=1
+            commentMapper.update(Wrappers.lambdaUpdate(CommentPo.class)
+                    .eq(CommentPo::getId, targetAction.getContentId()).setIncrBy(CommentPo::getCommentsCount, 1));
+
+        } else if (action.getType() == ActionType.COMMENT_BROADCAST) {
+            // 如果post.type是COMMENT_BROADCAST,targetPost.type 为 COMUNITY
+            Assert.isTrue(targetAction.getType() == ActionType.COMMUNITY,
+                    "targetAction.type error with type" + targetAction.getType());
+
+            action.setType(ActionType.COMMENT_BROADCAST);
+            actionMapper.insert(action);
+
+        } else
+            throw new IllegalArgumentException("target Action type " + targetAction.getType() + " is not supported");
+
+        return postDo;
     }
 
 }

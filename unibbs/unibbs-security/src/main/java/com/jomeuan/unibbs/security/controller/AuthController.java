@@ -10,6 +10,7 @@ import com.jomeuan.unibbs.entity.ProfilePo;
 import com.jomeuan.unibbs.entity.RolePo;
 import com.jomeuan.unibbs.entity.UserPo;
 import com.jomeuan.unibbs.entity.UserRolePo;
+import com.jomeuan.unibbs.exception.AppException;
 import com.jomeuan.unibbs.security.feign.ProfileFeignClient;
 import com.jomeuan.unibbs.security.mapper.RoleMapper;
 import com.jomeuan.unibbs.security.mapper.UserMapper;
@@ -26,8 +27,13 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
+
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.Assert;
@@ -41,26 +47,24 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class AuthController {
 
     @Autowired
-    IdGenerator idGenerator;
+    private IdGenerator idGenerator;
     @Autowired
-    PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private RedissonClient redissonClient;
 
     @Autowired
-    UserAuthenticationService userAuthenticationService;
+    private UserMapper userMapper;
     @Autowired
-    UserAndProfileService userAndProfileService;
+    private RoleMapper roleMapper;
     @Autowired
-    JWTService jwtService;
+    private UserRoleMapper userRoleMapper;
 
     @Autowired
-    UserMapper userMapper;
+    private UserAndProfileService userAndProfileService;
     @Autowired
-    RoleMapper roleMapper;
-    @Autowired
-    UserRoleMapper userRoleMapper;
+    private JWTService jwtService;
 
-    @Autowired
-    ProfileFeignClient profileFeignClient;
 
     /**
      * userVo中的密码没加密,在此处加密
@@ -71,40 +75,56 @@ public class AuthController {
      */
     @PostMapping("register")
     public Object register(@RequestBody UserVo userVo, HttpServletResponse response) throws IOException {
-        // 先检查该userVo中的 account 是否已经存在
-        if (userMapper.selectCount(
-                Wrappers.lambdaQuery(UserPo.class).eq(UserPo::getAccount, userVo.getUser().getAccount())) != 0) {
-            return R.error("账号已存在");
-        }
-        UserPo userPo = userVo.getUser();
-        userPo.setId(idGenerator.nextId());
-        userPo.setPassword(passwordEncoder.encode(userPo.getPassword()));
 
-        if (userVo.getRoles() == null) {
-            userVo.setRoles(new ArrayList<>());
+        final String lockKey = "register-lock";
+        RLock rLock = redissonClient.getLock(lockKey);
+
+        boolean locked;
+        try {
+            // 获取锁
+            locked = rLock.tryLock(1, 10, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            throw new RuntimeException(lockKey + "锁被中断了");
         }
 
-        // 添加游客角色后,存储userAuthentication
-        // contains 调用equals方法,故而重写了RolePo的equal方法
-        if (!userVo.getRoles().contains(Roles.VISITOR_ROLE)) {
-            userVo.getRoles().add(Roles.VISITOR_ROLE);
+        if (!locked) {
+            throw new AppException("服务器繁忙:" + lockKey + "获取锁失败");
         }
-        if (userVo.getProfile() == null)
-            userVo.setProfile(new ProfilePo());
-
-        userVo.getProfile().setId(userPo.getId());
 
         try {
-            userAndProfileService.saveUserVo(userVo);
-        } catch (RuntimeException e) {
-            e.printStackTrace();
-            if (response != null) {
-                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            // - 先检查该userVo中的 account 是否已经存在
+            if (userMapper.selectCount(
+                    Wrappers.lambdaQuery(UserPo.class).eq(UserPo::getAccount,
+                            userVo.getUser().getAccount())) != 0) {
+                throw new AppException("账号已存在");
             }
-            return R.error(null);
+            // - 预处理user对象
+            UserPo userPo = userVo.getUser();
+            userPo.setId(idGenerator.nextId());
+            userPo.setPassword(passwordEncoder.encode(userPo.getPassword()));
+
+            if (userVo.getRoles() == null) {
+                userVo.setRoles(new ArrayList<>());
+            }
+
+            // -- 添加游客角色后,存储userAuthentication
+            // -- contains 调用equals方法,故而重写了RolePo的equal方法
+            if (!userVo.getRoles().contains(Roles.VISITOR_ROLE)) {
+                userVo.getRoles().add(Roles.VISITOR_ROLE);
+            }
+            if (userVo.getProfile() == null)
+                userVo.setProfile(new ProfilePo());
+
+            userVo.getProfile().setId(userPo.getId());
+
+            // -
+            userAndProfileService.saveUserVo(userVo);
+        } finally {
+            rLock.unlock();
         }
 
-        // 应该重定向到网关对应的登录页面
+        // TODO: 应该重定向到网关对应的登录页面
         // response.sendRedirect("http://localhost:9010/login");
         userVo.getUser().setPassword(null);
         return R.ok(userVo);
@@ -136,14 +156,14 @@ public class AuthController {
 
     @Secured(Roles.VISITOR_ROLE_NAME)
     @GetMapping("parseJWT")
-    public Object parseJWT(@RequestHeader("token") String jwt) {
+    public ResponseEntity<UserAuthentication> parseJWT(@RequestHeader("token") String jwt) {
         UserAuthentication res;
         try {
             res = jwtService.parseJWT(jwt);
         } catch (JwtException e) {
-            return R.error("Token解析出错");
+            return ResponseEntity.badRequest().body(null);
         }
-        return R.ok(res);
+        return ResponseEntity.ok().body(res);
     }
 
 }

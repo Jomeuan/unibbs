@@ -69,8 +69,8 @@ public class RobotService {
         if (pos == 0 || t == 0) {
             action.setType(ActionType.COMMENT_BROADCAST);
             action.setTargetId(communityId);
-            R<PostVo> res = (R<PostVo>) postController.publishPost(new PostDo(action, comment), jwt);
-            actions[pos] = res.getData().getThisPost().getAction();
+            PostVo res = postController.publishPost(new PostDo(action, comment), jwt).getBody();;
+            actions[pos] = res.getThisPost().getAction();
         }
         // comment
         else if (t == 1) {
@@ -81,8 +81,8 @@ public class RobotService {
             for (; targetId == null; targetId = actions[random.nextInt(0, pos)].getId())
                 ;
             action.setTargetId(targetId);
-            R<PostVo> res = (R<PostVo>) postController.publishPost(new PostDo(action, comment), jwt);
-            actions[pos] = res.getData().getThisPost().getAction();
+            PostVo res = postController.publishPost(new PostDo(action, comment), jwt).getBody();;
+            actions[pos] = res.getThisPost().getAction();
         }
         // like
         else if (t == 2) {
