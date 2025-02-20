@@ -1,7 +1,5 @@
 package com.jomeuan.unibbs.domain;
 
-import java.math.BigInteger;
-
 import com.jomeuan.unibbs.entity.RolePo;
 
 

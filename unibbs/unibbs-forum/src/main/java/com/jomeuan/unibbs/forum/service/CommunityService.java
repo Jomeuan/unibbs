@@ -20,7 +20,6 @@ import com.jomeuan.unibbs.forum.feign.SecurityFeignClient;
 import com.jomeuan.unibbs.forum.mapper.ActionMapper;
 import com.jomeuan.unibbs.forum.mapper.CommunityContentMapper;
 import com.jomeuan.unibbs.forum.mapper.ModeratorMapper;
-import com.jomeuan.unibbs.forum.mapper.PostMapper;
 import com.jomeuan.unibbs.vo.ModeratorVo;
 import io.seata.spring.annotation.GlobalTransactional;
 
@@ -32,9 +31,6 @@ public class CommunityService {
     private ModeratorMapper moderatorMapper;
     @Autowired
     private ActionMapper actionMapper;
-    @Autowired
-    private PostMapper postMapper;
-
     @Autowired
     private SecurityFeignClient securityFeignClient;
 

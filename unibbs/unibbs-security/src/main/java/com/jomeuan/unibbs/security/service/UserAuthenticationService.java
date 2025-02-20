@@ -4,24 +4,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.jomeuan.unibbs.domain.UserAuthentication;
 import com.jomeuan.unibbs.entity.RolePo;
 import com.jomeuan.unibbs.entity.UserPo;
 import com.jomeuan.unibbs.entity.UserRolePo;
-import com.jomeuan.unibbs.security.feign.ProfileFeignClient;
 import com.jomeuan.unibbs.security.mapper.RoleMapper;
 import com.jomeuan.unibbs.security.mapper.UserMapper;
 import com.jomeuan.unibbs.security.mapper.UserRoleMapper;
-import com.jomeuan.unibbs.vo.UserVo;
-
-import io.seata.spring.annotation.GlobalTransactional;
 
 @Service
 public class UserAuthenticationService {
