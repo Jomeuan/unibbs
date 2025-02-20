@@ -16,6 +16,10 @@ import lombok.NoArgsConstructor;
 @TableName("thread")
 public class ThreadPo implements Serializable {
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = 8153760626064132971L;
     @TableId 
     private Long id;
     private Long creatorId;

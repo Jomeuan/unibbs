@@ -13,6 +13,11 @@ import lombok.Data;
 @TableName("moderator")
 public class ModeratorPo implements Serializable{
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = -8403695853489312697L;
+
     @TableId
     private Long id;
 

@@ -1,5 +1,6 @@
 package com.jomeuan.unibbs.entity;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -12,7 +13,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @TableName("role")
-public class RolePo {
+public class RolePo implements Serializable {
+    /**
+     *
+     */
+    private static final long serialVersionUID = -3189897147134064145L;
+
     /**
      * id:
      * 1:admin

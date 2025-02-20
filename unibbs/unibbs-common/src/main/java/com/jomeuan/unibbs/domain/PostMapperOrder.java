@@ -1,6 +1,5 @@
 package com.jomeuan.unibbs.domain;
 
-import lombok.Getter;
 
 public enum PostMapperOrder {
     LIKE_COUNT("comment.likes_count"),

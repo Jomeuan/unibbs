@@ -6,9 +6,13 @@ import java.lang.ProcessBuilder.Redirect.Type;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.redis.core.BoundZSetOperations;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +34,7 @@ import com.jomeuan.unibbs.domain.PostDo;
 import com.jomeuan.unibbs.domain.Roles;
 import com.jomeuan.unibbs.entity.ActionPo;
 import com.jomeuan.unibbs.entity.CommentPo;
+import com.jomeuan.unibbs.event.PostPublishEvent;
 import com.jomeuan.unibbs.exception.AppException;
 import com.jomeuan.unibbs.forum.mapper.ActionMapper;
 import com.jomeuan.unibbs.forum.mapper.CommentMapper;
@@ -55,6 +60,10 @@ public class PostController {
 
     @Autowired
     private IdGenerator idGenerator;
+    @Autowired
+    private ApplicationEventPublisher publisher;
+    @Autowired
+    private RedisTemplate<Object, Object> redisTemplate;
 
     @Autowired
     private JWTService jwtService;
@@ -95,6 +104,7 @@ public class PostController {
         try{
             // 保存post
             post=postService.savePost(post);
+            publisher.publishEvent(new PostPublishEvent(post));
         }catch(IllegalArgumentException | NullPointerException e){
             e.printStackTrace();
             throw new AppException(e);
@@ -213,6 +223,15 @@ public class PostController {
         return R.ok(res);
     }
 
+
+    /**
+     * 根据userId获得用户的历史发言
+     * @param userId
+     * @param page
+     * @param limit
+     * @param jwt
+     * @return
+     */
     @GetMapping()
     public Object listPosts(@RequestParam Long userId, @RequestParam Integer page, @RequestParam Integer limit,
             @RequestHeader("token") String jwt) {
@@ -233,6 +252,16 @@ public class PostController {
                 .collect(Collectors.toList());
         return R.ok(posts);
     }
+
+    @GetMapping("rank")
+    public ResponseEntity<List<PostVo>> listPostRank(@RequestParam(required = false)Integer size) {
+        BoundZSetOperations<Object,Object> zset = redisTemplate.boundZSetOps("rankings");
+        Set<Object> tmp = zset.reverseRangeByScore(1, Double.MAX_VALUE);
+        //tmp 中放的是String 而String::toString 就是它自身,因此获得actionId
+        List<PostVo> res=tmp.stream().map(o->postService.getPostVoByActionId(Long.parseLong(o.toString()))).collect(Collectors.toList());
+        return ResponseEntity.ok(res);
+    }
+    
 
     /**
      * 修改评论

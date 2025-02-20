@@ -14,6 +14,7 @@ import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
@@ -67,6 +68,18 @@ public class RedisConfiguration {
                 .cacheDefaults(config)
                 .build();
         return cacheManager;
+    }
+
+    @Bean
+    public RedisMessageListenerContainer redisMessageListenerContainer(RedisConnectionFactory factory) {
+        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
+        
+        container.setConnectionFactory(factory);
+        
+    //  container.setTaskExecutor(null);            // 设置用于执行监听器方法的 Executor
+    //  container.setErrorHandler(null);            // 设置监听器方法执行过程中出现异常的处理器
+    //  container.addMessageListener(null, null);   // 手动设置监听器 & 监听的 topic 表达式
+        return container;
     }
 
 }

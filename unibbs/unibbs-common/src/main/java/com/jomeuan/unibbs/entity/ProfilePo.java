@@ -14,6 +14,10 @@ import lombok.NoArgsConstructor;
 @TableName("profile")
 public class ProfilePo implements Serializable{
     /**
+     *
+     */
+    private static final long serialVersionUID = -7397820696465066036L;
+    /**
      * 等效于user.id
      */
     @TableId

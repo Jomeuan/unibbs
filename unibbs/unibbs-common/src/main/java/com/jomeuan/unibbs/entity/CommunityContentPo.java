@@ -12,6 +12,7 @@ import lombok.Data;
 @AllArgsConstructor
 @TableName("community_content")
 public class CommunityContentPo implements Serializable{
+    private static final long serialVersionUID = -1435464667710622609L;
     // 等同于action_id
     @TableId
     private Long id;

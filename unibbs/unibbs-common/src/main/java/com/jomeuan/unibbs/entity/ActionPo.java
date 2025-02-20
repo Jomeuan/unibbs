@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @TableName("action")
 public class ActionPo implements Serializable {
 
-  private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 7967441106828761402L;
 
   /**********action fields define****************/
 

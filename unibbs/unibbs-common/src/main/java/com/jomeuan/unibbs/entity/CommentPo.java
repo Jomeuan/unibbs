@@ -6,12 +6,9 @@ import com.baomidou.mybatisplus.annotation.TableName;
 
 import java.io.Serializable;
 
-import org.apache.ibatis.type.Alias;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Data
 @AllArgsConstructor
@@ -19,7 +16,7 @@ import lombok.Setter;
 @TableName("comment")
 public class CommentPo implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 8728203009294584426L;
 
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
