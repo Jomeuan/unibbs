@@ -9,6 +9,7 @@ import com.jomeuan.unibbs.profile.mapper.ProfileMapper;
 import com.jomeuan.unibbs.vo.R;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -20,19 +21,19 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
-@RequestMapping("profile")
+@RequestMapping("/profile")
 public class ProfileController {
     @Autowired
     private ProfileMapper profileMapper;
-
+    
     @GetMapping()
-    public Object getProfile(@RequestParam Long userId) {
+    public Object getProfile(@RequestParam(required = false) Long userId) {
         try {
             Assert.notNull(userId, "userId cannot be null");
         } catch (IllegalArgumentException | NullPointerException e) {
             return R.error(e.getMessage());
         }
-        return profileMapper.selectById(userId);
+        return ResponseEntity.ok(profileMapper.selectById(userId));
     }
 
     @Secured(Roles.VISITOR_ROLE_NAME)

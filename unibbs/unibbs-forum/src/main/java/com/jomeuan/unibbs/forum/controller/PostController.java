@@ -41,7 +41,7 @@ import com.jomeuan.unibbs.forum.mapper.CommentMapper;
 import com.jomeuan.unibbs.forum.service.CommunityService;
 import com.jomeuan.unibbs.forum.service.PostService;
 import com.jomeuan.unibbs.util.IdGenerator;
-import com.jomeuan.unibbs.util.JWTService;
+import com.jomeuan.unibbs.util.jwt.JWTService;
 import com.jomeuan.unibbs.vo.PostDetailVo;
 import com.jomeuan.unibbs.vo.PostVo;
 import com.jomeuan.unibbs.vo.R;
@@ -259,7 +259,7 @@ public class PostController {
         Set<Object> tmp = zset.reverseRangeByScore(1, Double.MAX_VALUE);
         //tmp 中放的是String 而String::toString 就是它自身,因此获得actionId
         List<PostVo> res=tmp.stream().map(o->postService.getPostVoByActionId(Long.parseLong(o.toString()))).collect(Collectors.toList());
-        return ResponseEntity.ok(res);
+        return ResponseEntity.ok(res.subList(0, size<=res.size() ?size:res.size() ));
     }
     
 

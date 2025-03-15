@@ -33,7 +33,7 @@ import com.jomeuan.unibbs.forum.mapper.PostMapper;
 import com.jomeuan.unibbs.forum.service.CommunityService;
 import com.jomeuan.unibbs.forum.service.PostService;
 import com.jomeuan.unibbs.util.IdGenerator;
-import com.jomeuan.unibbs.util.JWTService;
+import com.jomeuan.unibbs.util.jwt.JWTService;
 import com.jomeuan.unibbs.vo.CommunityDetailVo;
 import com.jomeuan.unibbs.vo.ModeratorVo;
 import com.jomeuan.unibbs.vo.R;

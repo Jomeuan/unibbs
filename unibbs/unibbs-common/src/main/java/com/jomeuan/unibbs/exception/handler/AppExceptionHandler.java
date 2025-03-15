@@ -1,6 +1,7 @@
 package com.jomeuan.unibbs.exception.handler;
 
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -22,7 +23,7 @@ public class AppExceptionHandler {
      */
     @ExceptionHandler(value = AppException.class)
     @ResponseBody
-    public R<?> bizExceptionHandler(AppException e){
-        return R.error(e.getMessage());
+    public ResponseEntity<RuntimeException> bizExceptionHandler(AppException e){
+        return ResponseEntity.badRequest().body(e);
     }
 }

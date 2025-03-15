@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.jomeuan.unibbs.domain.UserAuthentication;
 import com.jomeuan.unibbs.security.feign.ProfileFeignClient;
-import com.jomeuan.unibbs.util.JWTService;
+import com.jomeuan.unibbs.util.jwt.JWTService;
 import com.jomeuan.unibbs.vo.UserVo;
 
 import io.seata.spring.annotation.GlobalTransactional;

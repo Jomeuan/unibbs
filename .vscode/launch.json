@@ -2,6 +2,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "ProxyTest",
+            "request": "launch",
+            "mainClass": "ProxyTest",
+            "projectName": ""
+        },
+        {
+            "type": "java",
             "name": "LangTest",
             "request": "launch",
             "mainClass": "LangTest",
@@ -16,8 +23,7 @@
             "projectName": "unibbs-security",
             "args": "",
             "envFile": "${workspaceFolder}/.env",
-            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=4998 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=unibbs-security",
-            // "encoding": "gbk"
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=4998 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=unibbs-security"
         },
         {
             "type": "java",

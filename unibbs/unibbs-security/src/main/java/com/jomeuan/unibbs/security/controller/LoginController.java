@@ -11,14 +11,19 @@ import org.springframework.web.bind.annotation.RestController;
 import com.jomeuan.unibbs.domain.UserAuthentication;
 import com.jomeuan.unibbs.entity.UserPo;
 import com.jomeuan.unibbs.security.service.UserAuthenticationService;
-import com.jomeuan.unibbs.util.JWTService;
+import com.jomeuan.unibbs.util.jwt.JWTService;
 import com.jomeuan.unibbs.vo.JWTVo;
 import com.jomeuan.unibbs.vo.R;
 import com.jomeuan.unibbs.vo.UserVo;
 
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 @Slf4j
+// @CrossOrigin(origins = "*")
 @RestController
 public class LoginController {
     @Autowired
@@ -52,10 +57,15 @@ public class LoginController {
                     jwtService.buildJWT("userAuthentication", userAuthentication));
             return R.ok(res);
         } else {
-            //TODO:test
+            // TODO:test
 
             return R.error("账号与密码出错");
         }
+    }
+
+    @PostMapping("login")
+    public String getMethodName() {
+        return new String("hello");
     }
 
 }

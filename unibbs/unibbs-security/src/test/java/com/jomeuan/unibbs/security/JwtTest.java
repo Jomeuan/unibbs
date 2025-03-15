@@ -9,7 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.jomeuan.unibbs.domain.Roles;
 import com.jomeuan.unibbs.domain.UserAuthentication;
 import com.jomeuan.unibbs.entity.UserPo;
-import com.jomeuan.unibbs.util.JWTService;
+import com.jomeuan.unibbs.util.jwt.JWTService;
 
 import lombok.extern.slf4j.Slf4j;
 

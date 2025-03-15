@@ -1,9 +1,5 @@
 package com.jomeuan.unibbs.vo;
 
-import java.util.List;
-
-import org.springframework.context.annotation.Profile;
-
 import com.jomeuan.unibbs.entity.ModeratorPo;
 import com.jomeuan.unibbs.entity.ProfilePo;
 

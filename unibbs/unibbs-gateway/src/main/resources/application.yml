@@ -1,18 +1,37 @@
 spring:
   cloud:
     gateway:
+      # 路由
       routes:
       - id: unibbs-security
         uri: lb://unibbs-security
         # uri: http://localhost:9010
         predicates:
         - Path=/security/**,/login/**
+        filters:
+        - RemoveRequestHeader=Origin
+
       - id: profile-route
         uri: lb://unibbs-profile
         predicates:
         - Path=/profile/**
+        filters:
+        - RemoveRequestHeader=Origin
+
       - id: forum-route
         uri: lb://unibbs-forum
         predicates:
-        - Path=/post/**,/community/**
-      
+        - Path=/post/**,/community/**,robot/**
+        filters:
+        - RemoveRequestHeader=Origin
+
+      # cors配置
+      globalcors:
+          add-to-simple-url-handler-mapping: true
+          cors-configurations:
+            '[/**]':
+              allowedOrigins: "http://localhost:3000"
+              allowedHeaders: "*"
+              allowedMethods: "*"
+
+

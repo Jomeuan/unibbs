@@ -18,7 +18,7 @@ import com.jomeuan.unibbs.security.mapper.UserRoleMapper;
 import com.jomeuan.unibbs.security.service.UserAndProfileService;
 import com.jomeuan.unibbs.security.service.UserAuthenticationService;
 import com.jomeuan.unibbs.util.IdGenerator;
-import com.jomeuan.unibbs.util.JWTService;
+import com.jomeuan.unibbs.util.jwt.JWTService;
 import com.jomeuan.unibbs.vo.R;
 import com.jomeuan.unibbs.vo.UserVo;
 

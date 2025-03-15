@@ -2,6 +2,8 @@ package com.jomeuan.unibbs.exception;
 
 public class AppException extends RuntimeException {
 
+    private static final long serialVersionUID = -4574798572974879027L;
+
     public AppException() {
         super();
     }

@@ -2,14 +2,10 @@ package com.jomeuan.unibbs.forum.service;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.concurrent.TimeUnit;
-
 import org.redisson.api.RBucket;
-import org.redisson.api.RSortedSet;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.redis.core.BoundZSetOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -23,6 +19,8 @@ import com.jomeuan.unibbs.domain.PostDo;
 import com.jomeuan.unibbs.entity.ActionPo;
 import com.jomeuan.unibbs.entity.CommentPo;
 import com.jomeuan.unibbs.event.PostPublishEvent;
+import com.jomeuan.unibbs.exception.AppException;
+import com.jomeuan.unibbs.forum.feign.ProfileFeignClient;
 import com.jomeuan.unibbs.forum.mapper.ActionMapper;
 import com.jomeuan.unibbs.forum.mapper.CommentMapper;
 import com.jomeuan.unibbs.util.IdGenerator;
@@ -34,11 +32,11 @@ public class PostService {
     @Autowired
     private IdGenerator idGenerator;
     @Autowired
-    private ApplicationEventPublisher publisher;
-    @Autowired
     private RedisTemplate<Object, Object> redisTemplate;
     @Autowired
     private RedissonClient redissonClient;
+    @Autowired
+    private ProfileFeignClient profileFeignClient;
 
     @Autowired
     private ActionMapper actionMapper;
@@ -47,9 +45,14 @@ public class PostService {
 
     // TODO: 从redis 缓存中取
     public PostDo getPostDoByActionId(Long actionId) {
+
         PostDo res = new PostDo();
+        // - 填充action
         res.setAction(actionMapper.selectById(actionId));
-        // 只有action_type为下面值时才装填comment
+        if (res.getAction() == null) {
+            throw new AppException("no exsit post with actionId:" + actionId);
+        }
+        // - 只有action_type为下面值时才装填comment
         switch (res.getAction().getType()) {
             case ActionType.COMMENT:
             case ActionType.COMMENT_BROADCAST:
@@ -57,22 +60,31 @@ public class PostService {
             default:
                 break;
         }
+        // - 填充profile
+        res.setProfile(profileFeignClient.getProfile(res.getAction().getUserId()));
+
         return res;
+
     }
 
     public PostVo getPostVoByActionId(Long actionId) {
+
         PostVo res = new PostVo(this.getPostDoByActionId(actionId), null);
-        // 管理删除的commonet 会出现targetId==null 的情况
-        if (res.getThisPost().getAction().getTargetId() != null) {
-            switch (res.getThisPost().getAction().getType()) {
-                case ActionType.COMMENT:
-                case ActionType.LIKE:
+
+        // 只有COMMENT和LIKE类型填充targetPost
+        switch (res.getThisPost().getAction().getType()) {
+            case ActionType.COMMENT:
+            case ActionType.LIKE:
+                // 管理员删除的commonet 会出现targetId==null 的情况
+                if (res.getThisPost().getAction().getTargetId() != null) {
                     res.setTargetPost(this.getPostDoByActionId(res.getThisPost().getAction().getTargetId()));
-                default:
-                    break;
-            }
+                }
+            default:
+                break;
         }
+
         return res;
+        
     }
 
     /**
@@ -168,15 +180,15 @@ public class PostService {
     @EventListener()
     public PostDo updateRankings(PostPublishEvent event) {
         PostDo postDo = event.getPostDo();
+
         // RSortedSet<PostDo> sortedSet = redissonClient.getSortedSet("rankings");;
-        BoundZSetOperations<Object,Object> zset =
-            redisTemplate.boundZSetOps("rankings");
+        BoundZSetOperations<Object, Object> zset = redisTemplate.boundZSetOps("rankings");
 
         PostDo rootPostDo = this.getRootPost(postDo.getAction().getId());
-        
-        zset.addIfAbsent(rootPostDo.getAction().getId(),0);
+
+        zset.addIfAbsent(rootPostDo.getAction().getId(), 0);
         zset.incrementScore(rootPostDo.getAction().getId(), 1);
-        
+
         return postDo;
     }
 
