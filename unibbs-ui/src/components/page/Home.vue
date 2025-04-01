@@ -7,3 +7,7 @@
         </v-row>
     </VContainer>
 </template>
+
+<script setup>
+
+</script>

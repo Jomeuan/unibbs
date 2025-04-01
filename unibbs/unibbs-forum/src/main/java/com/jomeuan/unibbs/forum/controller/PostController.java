@@ -46,6 +46,8 @@ import com.jomeuan.unibbs.vo.PostDetailVo;
 import com.jomeuan.unibbs.vo.PostVo;
 import com.jomeuan.unibbs.vo.R;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * <p>
  * 前端控制器
@@ -54,6 +56,7 @@ import com.jomeuan.unibbs.vo.R;
  * @author jomeuan
  * @since 2024-12-03
  */
+@Slf4j
 @RestController
 @RequestMapping("/post")
 public class PostController {
@@ -101,24 +104,33 @@ public class PostController {
             throw new AppException(e);
         }
 
-        try{
+        try {
             // 保存post
-            post=postService.savePost(post);
+            post = postService.savePost(post);
             publisher.publishEvent(new PostPublishEvent(post));
-        }catch(IllegalArgumentException | NullPointerException e){
+        } catch (IllegalArgumentException | NullPointerException e) {
             e.printStackTrace();
             throw new AppException(e);
         }
 
-
         PostVo res = new PostVo();
         res.setThisPost(post);
-        if(post.getAction().getType()==ActionType.COMMENT){
+        if (post.getAction().getType() == ActionType.COMMENT) {
             res.setTargetPost(postService.getPostDoByActionId(post.getAction().getTargetId()));
         }
 
         return ResponseEntity.ok(res);
     }
+
+
+    @Transactional
+    @GetMapping("like")
+    public Integer getLikeCounts(@RequestParam Long postId, @RequestHeader("token") String jwt) {
+        try{
+            
+        }
+    }
+
 
     /**
      * 用户点赞/取消点赞
@@ -199,7 +211,7 @@ public class PostController {
             // 一级评论
             PostDetailVo comment = new PostDetailVo();
             // 2.2填充评论的 postvo,注意不填充targetPost
-            comment.setPost(new PostVo(postService.getPostDoByActionId(commentActionPo.getId()), new PostDo()));
+            comment.setPost(new PostVo(postService.getPostDoByActionId(commentActionPo.getId()), null));
             // 2.3填充评论的评论
             // 2.3.1 获得二级评论的action_id(user_id=楼主/一级评论的作者)
             List<ActionPo> comment2ActionPo = actionMapper.selectList(
@@ -223,9 +235,9 @@ public class PostController {
         return R.ok(res);
     }
 
-
     /**
      * 根据userId获得用户的历史发言
+     * 
      * @param userId
      * @param page
      * @param limit
@@ -254,14 +266,35 @@ public class PostController {
     }
 
     @GetMapping("rank")
-    public ResponseEntity<List<PostVo>> listPostRank(@RequestParam(required = false)Integer size) {
-        BoundZSetOperations<Object,Object> zset = redisTemplate.boundZSetOps("rankings");
+    public ResponseEntity<List<PostVo>> listPostRank(@RequestParam(required = false) Integer size) {
+        BoundZSetOperations<Object, Object> zset = redisTemplate.boundZSetOps("rankings");
         Set<Object> tmp = zset.reverseRangeByScore(1, Double.MAX_VALUE);
-        //tmp 中放的是String 而String::toString 就是它自身,因此获得actionId
-        List<PostVo> res=tmp.stream().map(o->postService.getPostVoByActionId(Long.parseLong(o.toString()))).collect(Collectors.toList());
-        return ResponseEntity.ok(res.subList(0, size<=res.size() ?size:res.size() ));
+        // tmp 中放的是String 而String::toString 就是它自身,因此获得actionId
+        List<PostVo> res = tmp.stream().map(o -> postService.getPostVoByActionId(Long.parseLong(o.toString())))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(res.subList(0, size <= res.size() ? size : res.size()));
     }
-    
+
+    @GetMapping("find")
+    public ResponseEntity<List<PostVo>> findPost(@RequestParam String keyword, @RequestParam Integer page,
+            @RequestParam Integer limit) {
+        List<CommentPo> comments = commentMapper.selectPage(new Page<>(page, limit),
+                Wrappers.lambdaQuery(CommentPo.class)
+                        .like(CommentPo::getContent, "%" + keyword + "%")
+                        .orderBy(true, false, CommentPo::getLikesCount))
+                .getRecords();
+        List<PostVo> res = comments.stream().map((comment) -> {
+            ActionPo action = actionMapper.selectOne(Wrappers.lambdaQuery(ActionPo.class)
+                    .eq(ActionPo::getContentId, comment.getId())
+                    .in(ActionPo::getType, List.of(ActionType.COMMENT, ActionType.COMMENT_BROADCAST)));
+            if (action == null) {
+                // 存在着action有而对应comment没有的数据不一致的情况
+                return null;
+            }
+            return postService.getPostVoByActionId(action.getId());
+        }).filter((post) -> post != null).toList();
+        return ResponseEntity.ok(res);
+    }
 
     /**
      * 修改评论

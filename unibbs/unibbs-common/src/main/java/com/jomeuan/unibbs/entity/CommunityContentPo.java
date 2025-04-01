@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,6 +17,7 @@ public class CommunityContentPo implements Serializable{
     private static final long serialVersionUID = -1435464667710622609L;
     // 等同于action_id
     @TableId
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
     private String title;
     private String avatar;

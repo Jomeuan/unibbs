@@ -36,7 +36,7 @@ public class JWTService {
     public String buildJWT(String keyName, Object object) {
         JwtBuilder jwtBuilder = Jwts.builder();
         jwtBuilder.claim(keyName, object);
-        //TODO : 过期时间
+        // TODO : 过期时间
         return jwtBuilder.signWith(key).compact();
     }
 
@@ -53,26 +53,25 @@ public class JWTService {
 
     /**
      * 校验jwtAuthentication 并且填充GrantedAuthority和UserAuthentication
-     * @param jwtAuthentication
+     * 
+     * @param
      * @return 新的jwtAuthentication
      * @throws AuthenticationException
      */
-    public JWTAuthentication authenticate(JWTAuthentication jwtAuthentication) throws AuthenticationException {
-        String token = jwtAuthentication.getPrincipal().toString();
+    public JWTAuthentication authenticate(String token) throws AuthenticationException {
         if (!StringUtils.hasText(token)) {
             throw new UsernameNotFoundException("token空白");
         }
+        UserAuthentication userAuthentication;
         try {
-            jwtAuthentication.setUserAuthentication(this.parseJWT(token));
+            userAuthentication = this.parseJWT(token);
         } catch (JwtException e) {
             e.printStackTrace();
-            throw new AccessDeniedException("token valid wtih: "+ token);
+            throw new AccessDeniedException("token valid wtih: " + token);
         }
 
-        jwtAuthentication.setAuthenticated(true);
-
-        List<GrantedAuthority> grantedAuthorities=jwtAuthentication.getUserAuthentication().getRoles().stream()
-                    .map(rolePo -> new SimpleGrantedAuthority("ROLE_" + rolePo.getName())).collect(Collectors.toList());
+        List<GrantedAuthority> grantedAuthorities = userAuthentication.getRoles().stream()
+                .map(rolePo -> new SimpleGrantedAuthority("ROLE_" + rolePo.getName())).collect(Collectors.toList());
 
         JWTAuthentication res = new JWTAuthentication(token, grantedAuthorities);
         res.setAuthenticated(true);
@@ -80,14 +79,22 @@ public class JWTService {
         return res;
     }
 
-    @Cacheable(value="jwtCache")
-    public JWTAuthentication anonymousAuthentication() {
-        
-        UserAuthentication userAuthentication =new UserAuthentication();
-        userAuthentication.setUser(new UserPo(null,"anymous",null,1,null));
-        userAuthentication.setRoles(List.of(Roles.ANONYMOUS_ROLE));
+    private JWTAuthentication anonymousJwtAuthentication;
 
-        return new JWTAuthentication(this.buildJWT("userAuthentication", userAuthentication), null);
+    public JWTAuthentication anonymousAuthentication() {
+
+        if (anonymousJwtAuthentication == null) {
+
+            UserAuthentication userAuthentication = new UserAuthentication(new UserPo(null, "anymous", null, 1, null),
+                    List.of(Roles.ANONYMOUS_ROLE));
+            anonymousJwtAuthentication = new JWTAuthentication(
+                    this.buildJWT("userAuthentication", userAuthentication),
+                    null);
+            anonymousJwtAuthentication.setUserAuthentication(userAuthentication);
+            anonymousJwtAuthentication.setAuthenticated(true);
+        }
+
+        return anonymousJwtAuthentication;
     }
 
 }

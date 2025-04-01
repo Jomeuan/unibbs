@@ -8,6 +8,8 @@ import com.jomeuan.unibbs.entity.ProfilePo;
 import com.jomeuan.unibbs.profile.mapper.ProfileMapper;
 import com.jomeuan.unibbs.vo.R;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -64,9 +66,9 @@ public class ProfileController {
     }
 
     @GetMapping("find")
-    public Object findUser(@RequestParam String keyWord, @RequestParam Integer page) {
-        return R.ok(profileMapper.selectPage(new Page<ProfilePo>(page, 10),
-                Wrappers.lambdaQuery(ProfilePo.class).like(ProfilePo::getNickname, keyWord)).getRecords());
+    public ResponseEntity<List<ProfilePo>> findUser(@RequestParam String keyword, @RequestParam Integer page ,@RequestParam Integer limit) {
+        return ResponseEntity.ok(profileMapper.selectPage(new Page<ProfilePo>(page, limit),
+                Wrappers.lambdaQuery(ProfilePo.class).like(ProfilePo::getNickname, keyword)).getRecords());
     }
 
 }

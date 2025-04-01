@@ -6,7 +6,7 @@
             </v-col>
         </v-row>
 
-        <v-row v-else justify="center" dense>
+        <v-row v-else justify="center">
             <v-col cols="12">
                 <v-form v-model="form" @submit.prevent="onSubmit">
 

@@ -3,7 +3,10 @@ package com.jomeuan.unibbs.entity;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,6 +22,8 @@ public class UserPo implements Serializable {
     
     private static final long serialVersionUID = -4732087812190984052L;
 
+    @TableId
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
 
     // 用来登录的账号

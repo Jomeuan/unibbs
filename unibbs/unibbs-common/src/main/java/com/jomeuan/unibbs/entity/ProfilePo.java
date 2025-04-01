@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,6 +23,7 @@ public class ProfilePo implements Serializable{
      * 等效于user.id
      */
     @TableId
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
     private String nickname;
     private String avatar;

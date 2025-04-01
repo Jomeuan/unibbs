@@ -8,6 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import com.jomeuan.unibbs.domain.UserAuthentication;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter

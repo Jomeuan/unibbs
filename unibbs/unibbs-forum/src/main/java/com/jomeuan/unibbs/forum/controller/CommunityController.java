@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -165,6 +166,14 @@ public class CommunityController {
                         .map(action -> postService.getPostVoByActionId(action.getId()))
                         .collect(Collectors.toList()));
         return R.ok(res);
+    }
+
+    @GetMapping("find")
+    public ResponseEntity<List<CommunityContentPo>> findCommunity(@RequestParam String keyword, @RequestParam Integer page,
+    @RequestParam Integer limit){
+        List<CommunityContentPo> res = communityContentMapper.selectPage(Page.of(page,limit), 
+            Wrappers.lambdaQuery(CommunityContentPo.class).like(CommunityContentPo::getTitle, "%"+keyword+"%")).getRecords();
+        return ResponseEntity.ok(res);
     }
 
     @Secured(Roles.MODERATOR_ROLE_NAME)
