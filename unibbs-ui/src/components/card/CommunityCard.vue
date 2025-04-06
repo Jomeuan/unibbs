@@ -1,6 +1,7 @@
 <template>
     <!-- 用户昵称,用户账号 -->
-    <VCard :title="props.communityContent.title"  max-width="500" @click="openCommunityIndex">
+    <VCard :title="props.communityContent.title"  @click="openCommunityIndex" >
+
         <!-- 内容 -->
          <v-card-text class="text-h5 py-2">
             {{  props.communityContent.introduction }}
@@ -29,7 +30,7 @@ const props = defineProps({
 })
 
 function openCommunityIndex(){
-    router.replace({path:"community/index",query:{communityId:props.communityContent.id,page:1}})
+    router.push({path:"community/index",query:{communityId:props.communityContent.id,page:1}})
 }
 
 </script>

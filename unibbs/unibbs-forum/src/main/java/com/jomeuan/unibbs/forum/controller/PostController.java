@@ -15,6 +15,8 @@ import org.springframework.data.redis.core.BoundZSetOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -32,6 +34,7 @@ import com.jomeuan.unibbs.domain.ActionType;
 import com.jomeuan.unibbs.domain.LikeDo;
 import com.jomeuan.unibbs.domain.PostDo;
 import com.jomeuan.unibbs.domain.Roles;
+import com.jomeuan.unibbs.domain.UserAuthentication;
 import com.jomeuan.unibbs.entity.ActionPo;
 import com.jomeuan.unibbs.entity.CommentPo;
 import com.jomeuan.unibbs.event.PostPublishEvent;
@@ -122,15 +125,28 @@ public class PostController {
         return ResponseEntity.ok(res);
     }
 
-
+    /**
+     * 获取用户点赞过该post多少次
+     * 
+     * @param postId
+     * @param jwt
+     * @return
+     */
+    @Secured(Roles.VISITOR_ROLE_NAME)
     @Transactional
     @GetMapping("like")
-    public Integer getLikeCounts(@RequestParam Long postId, @RequestHeader("token") String jwt) {
-        try{
-            
+    public ResponseEntity<String> getLikeCounts(@RequestParam Long postId, @RequestHeader("token") String jwt) {
+        UserAuthentication userAuthentication = jwtService.parseJWT(jwt);
+        ActionPo action = actionMapper.selectOne(
+                Wrappers.lambdaQuery(ActionPo.class).eq(ActionPo::getUserId, userAuthentication.getUser().getId())
+                        .eq(ActionPo::getTargetId, postId)
+                        .eq(ActionPo::getType, ActionType.LIKE));
+        if (action == null) {
+            return ResponseEntity.ok().body("0");
+        } else {
+            return ResponseEntity.ok().body(action.getContentId().toString());
         }
     }
-
 
     /**
      * 用户点赞/取消点赞
@@ -175,6 +191,7 @@ public class PostController {
             actionMapper.updateById(likeAction);
             likeDo.setAction(likeAction);
         }
+        // TODO:targetContent 不存在的情况
 
         // 给targetContent.likeCounts+=1/-=1: contentId=1
         Long targetContentId = actionMapper.selectById(likeDo.getAction().getTargetId()).getContentId();
@@ -349,22 +366,72 @@ public class PostController {
     /**
      * 管理员从板块中删除评论
      */
+    // @Secured(Roles.MODERATOR_ROLE_NAME)
+    // @Transactional
+    // @DeleteMapping
+    // public Object deletePost(@RequestBody PostDo postDo, @RequestHeader("token")
+    // String jwt) {
+    // ActionPo postAction;
+    // try {
+    // ActionPo action = postDo.getAction();
+    // Assert.isTrue(action.getUserId().equals(jwtService.parseJWT(jwt).getUser().getId()),
+    // "jwt not equal to user");
+    // Assert.notNull(action.getTargetId(), "target post Id cannot be null");
+
+    // Long commuityId = action.getContentId();
+    // // 不能是null,对应的action_type是不是COMMUNITY
+    // communityService.checkCommunityId(commuityId);
+    // // 验证用户是不是该community的MODERATOR
+    // communityService.checkModerator(action.getUserId(), commuityId);
+
+    // // 验证要删除的帖子是COMMENT(_BROADCAST)
+    // postAction = actionMapper.selectById(action.getTargetId());
+    // Assert.isTrue(
+    // postAction.getType() == ActionType.COMMENT || postAction.getType() ==
+    // ActionType.COMMENT_BROADCAST,
+    // "target post type should be Comment or Comment_Broadcast");
+
+    // } catch (IllegalArgumentException | NullPointerException e) {
+    // e.printStackTrace();
+    // return R.error(e.getMessage());
+    // }
+    // // 找到最target的post是不是指向community
+    // Long commuityId = postDo.getAction().getContentId();
+    // ActionPo tmpAction = postAction;
+    // while (tmpAction.getType() == ActionType.COMMENT) {
+    // tmpAction = actionMapper.selectById(postAction.getTargetId());
+    // }
+    // // 确定最target的post.Type是COMMENT_BROADCAST,并且对应的communityId相同
+    // if (tmpAction.getType() == ActionType.COMMENT_BROADCAST
+    // &&
+    // actionMapper.selectById(tmpAction.getTargetId()).getId().equals(commuityId))
+    // {
+    // // 修改action的target_id为null
+    // actionMapper.update(null, Wrappers.lambdaUpdate(ActionPo.class)
+    // .set(ActionPo::getTargetId, null)
+    // .eq(ActionPo::getId, postAction.getId()));
+    // } else {
+    // // 无权删除不属于你管理的帖子
+    // return R.error("You do not have the right to delete posts that no under you
+    // managing.");
+    // }
+    // return R.ok(null);
+    // }
+
+    /**
+     * 管理员从板块中删除评论
+     */
     @Secured(Roles.MODERATOR_ROLE_NAME)
     @Transactional
     @DeleteMapping
     public Object deletePost(@RequestBody PostDo postDo, @RequestHeader("token") String jwt) {
         ActionPo postAction;
+        PostDo rootPost;
         try {
             ActionPo action = postDo.getAction();
             Assert.isTrue(action.getUserId().equals(jwtService.parseJWT(jwt).getUser().getId()),
                     "jwt not equal to user");
             Assert.notNull(action.getTargetId(), "target post Id cannot be null");
-
-            Long commuityId = action.getContentId();
-            // 不能是null,对应的action_type是不是COMMUNITY
-            communityService.checkCommunityId(commuityId);
-            // 验证用户是不是该community的MODERATOR
-            communityService.checkModerator(action.getUserId(), commuityId);
 
             // 验证要删除的帖子是COMMENT(_BROADCAST)
             postAction = actionMapper.selectById(action.getTargetId());
@@ -372,27 +439,19 @@ public class PostController {
                     postAction.getType() == ActionType.COMMENT || postAction.getType() == ActionType.COMMENT_BROADCAST,
                     "target post type should be Comment or Comment_Broadcast");
 
+            // 判断根帖子是不是在community里面的
+            rootPost = postService.getRootPost(postDo.getAction().getTargetId());
+            // 验证用户是不是该community的MODERATOR
+            communityService.checkModerator(action.getUserId(), rootPost.getAction().getTargetId());
+
         } catch (IllegalArgumentException | NullPointerException e) {
-            e.printStackTrace();
-            return R.error(e.getMessage());
+            throw new AppException(e.getMessage());
         }
         // 找到最target的post是不是指向community
-        Long commuityId = postDo.getAction().getContentId();
-        ActionPo tmpAction = postAction;
-        while (tmpAction.getType() == ActionType.COMMENT) {
-            tmpAction = actionMapper.selectById(postAction.getTargetId());
-        }
-        // 确定最target的post.Type是COMMENT_BROADCAST,并且对应的communityId相同
-        if (tmpAction.getType() == ActionType.COMMENT_BROADCAST
-                && actionMapper.selectById(tmpAction.getTargetId()).getId().equals(commuityId)) {
-            // 修改action的target_id为null
-            actionMapper.update(null, Wrappers.lambdaUpdate(ActionPo.class)
-                    .set(ActionPo::getTargetId, null)
-                    .eq(ActionPo::getId, postAction.getId()));
-        } else {
-            // 无权删除不属于你管理的帖子
-            return R.error("You do not have the right to delete posts that you do not manage.");
-        }
+        actionMapper.update(null, Wrappers.lambdaUpdate(ActionPo.class)
+                .set(ActionPo::getTargetId, null)
+                .eq(ActionPo::getId, postAction.getId()));
         return R.ok(null);
     }
+
 }

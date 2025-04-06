@@ -116,7 +116,6 @@ public class CommunityService {
         ActionPo communityAction = actionMapper.selectById(communityId);
 
         Assert.notNull(communityAction, "community Id not exist");
-        // 验证用户是不是该community的MODERATOR
         Assert.isTrue(communityAction.getType().equals(ActionType.COMMUNITY),
                 "targetAction type should be ActionType.COMMUNITY");
     }

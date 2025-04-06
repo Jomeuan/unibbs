@@ -21,7 +21,7 @@ spring:
       - id: forum-route
         uri: lb://unibbs-forum
         predicates:
-        - Path=/post/**,/community/**,robot/**
+        - Path=/post/**,/community/**,/robot/**
         filters:
         - RemoveRequestHeader=Origin
 

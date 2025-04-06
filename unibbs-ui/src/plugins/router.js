@@ -5,6 +5,7 @@ import Home from '@/components/page/Home.vue'
 import Login from '@/components/page/Login.vue'
 import Search from '@/components/page/Search.vue'
 import PostDetail from '@/components/page/PostDetail.vue'
+import ProfilePage from '@/components/page/ProfilePage.vue'
 
 const routes = [
     //   { path: '/about', component: AboutView },
@@ -13,7 +14,7 @@ const routes = [
     { path: "/login", component: Login },
     { path: "/search", component: Search },
     { path: "/post/detail", component: PostDetail },
-
+    {path:"/profile",component:ProfilePage},
 ]
 
 const router = createRouter({

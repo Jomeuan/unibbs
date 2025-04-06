@@ -1,22 +1,16 @@
 package com.jomeuan.unibbs.forum.service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.atomic.AtomicInteger;
-
 import org.springframework.ai.ollama.OllamaChatModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.jomeuan.unibbs.domain.ActionType;
-import com.jomeuan.unibbs.domain.LikeDo;
 import com.jomeuan.unibbs.domain.PostDo;
 import com.jomeuan.unibbs.domain.Roles;
 import com.jomeuan.unibbs.entity.ActionPo;
@@ -25,8 +19,6 @@ import com.jomeuan.unibbs.entity.ProfilePo;
 import com.jomeuan.unibbs.forum.controller.PostController;
 import com.jomeuan.unibbs.util.jwt.JWTAuthentication;
 import com.jomeuan.unibbs.vo.PostVo;
-import com.jomeuan.unibbs.vo.R;
-
 import jakarta.annotation.PostConstruct;
 
 @Service

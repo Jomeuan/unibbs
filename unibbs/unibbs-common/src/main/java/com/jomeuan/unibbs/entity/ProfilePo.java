@@ -26,6 +26,9 @@ public class ProfilePo implements Serializable{
     @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
     private String nickname;
+
+    // TODO:缺了个人简介
+    
     private String avatar;
     private String phone;
     private String email;

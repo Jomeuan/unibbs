@@ -6,9 +6,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class R<T> {
-    R.CodeType code;
-    String msg;
-    T data;
+    public R.CodeType code;
+    public String msg;
+    public T data;
 
     public static <T> R<T> ok(T data) {
         R<T> r = new R<T>();

@@ -1,6 +1,6 @@
 <!-- 用来搜索帖子和板块(社区) -->
 <template>
-  <v-container width="500" class="mx-0">
+  <v-container>
     <!-- 搜索框 -->
     <v-row justify="center" >
       <v-col cols="12">
@@ -60,8 +60,7 @@ const communityResult = ref()
 const postResult = ref()
 const profileResult = ref()
 
-
-
+// Todo改变query来搜索
 function onClick() {
   loading.value = true
   fetch("http://localhost:9999/community/find?keyword=" + keyword.value + "&page=1&limit=100")
@@ -82,7 +81,7 @@ function onClick() {
   fetch("http://localhost:9999/profile/find?keyword=" + keyword.value + "&page=1&limit=100")
     .then(response => response.json())
     .then(data => {
-      console.log(data)
+      // console.log(data)
       profileResult.value = data
     })
 

@@ -129,7 +129,7 @@ public class CommunityController {
 
         // update community content
         communityContentMapper.updateById(communityDo.getCommunityContent());
-        return R.ok(this.getCommunityDetail(commuityId, 1, 0));
+        return R.ok(this.getCommunityDetail(commuityId, 1, 0).getData());
     }
 
     /**
@@ -139,7 +139,7 @@ public class CommunityController {
      * @return
      */
     @GetMapping("index")
-    public Object getCommunityDetail(@RequestParam Long communityId,
+    public R<CommunityDetailVo> getCommunityDetail(@RequestParam Long communityId,
             @RequestParam Integer page, @RequestParam Integer limit) {
         // 验证communityID
         CommunityDetailVo res = new CommunityDetailVo();
@@ -210,7 +210,7 @@ public class CommunityController {
             moderatorVo.getModerator().setCommunityId(commuityId);
         });
         communityService.addModerator(communityDo);
-        return R.ok(this.getCommunityDetail(commuityId, 1, 0));
+        return R.ok(this.getCommunityDetail(commuityId, 1, 0).getData());
     }
 
     @Secured(Roles.MODERATOR_ROLE_NAME)
@@ -245,6 +245,6 @@ public class CommunityController {
             return R.error(e.getMessage());
         }
         communityService.removeModerator(communityDo);
-        return R.ok(this.getCommunityDetail(commuityId, 1, 0));
+        return R.ok(this.getCommunityDetail(commuityId, 1, 0).getData());
     }
 }
